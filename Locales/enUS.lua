@@ -17,6 +17,7 @@ ns.L = {
     HISTORY_LIMIT = "Completed rolls to keep",
     AUTO_SHOW = "Open for a new roll",
     WINDOW_SCALE = "Window scale",
+    WINDOW_OPACITY = "Window opacity",
     APPLY = "Apply",
     CLEAR_HISTORY = "Clear history",
     RESET_WINDOW = "Reset window",

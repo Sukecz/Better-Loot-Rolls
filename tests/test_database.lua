@@ -22,7 +22,8 @@ ns.Database:Initialize()
 
 assert(ns.Database:Get("historyLimit") == 100)
 assert(ns.Database:Get("scale") == 1)
-assert(ns.Database:Get("width") == 280)
+assert(ns.Database:Get("opacity") == 1)
+assert(ns.Database:Get("width") == 220)
 assert(ns.Database:Get("height") == 800)
 assert(ns.Database:Get("autoShow") == false)
 assert(#ns.Database:GetHistory() == 100)
@@ -46,8 +47,9 @@ BetterLootRollsDB = {
     history = {},
 }
 ns.Database:Initialize()
-assert(BetterLootRollsDB.schemaVersion == 2)
-assert(ns.Database:Get("width") == 360)
-assert(ns.Database:Get("height") == 260)
+assert(BetterLootRollsDB.schemaVersion == 3)
+assert(ns.Database:Get("width") == 300)
+assert(ns.Database:Get("height") == 240)
+assert(ns.Database:Get("opacity") == 1)
 
 print("test_database.lua: ok")

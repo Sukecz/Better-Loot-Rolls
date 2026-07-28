@@ -24,6 +24,7 @@ function Options:Apply()
     ns.Database:Set("historyLimit", self.historyEdit:GetNumber())
     ns.Database:Set("autoShow", self.autoShow:GetChecked())
     ns.Database:Set("scale", self.scaleSlider:GetValue())
+    ns.Database:Set("opacity", self.opacitySlider:GetValue())
     ns.Database:PruneHistory()
     ns.MainWindow:ApplySettings()
     self:Refresh()
@@ -33,6 +34,7 @@ function Options:Refresh()
     self.historyEdit:SetNumber(ns.Database:Get("historyLimit"))
     self.autoShow:SetChecked(ns.Database:Get("autoShow"))
     self.scaleSlider:SetValue(ns.Database:Get("scale"))
+    self.opacitySlider:SetValue(ns.Database:Get("opacity"))
 end
 
 function Options:Initialize()
@@ -42,7 +44,7 @@ function Options:Initialize()
 
     local frame = CreateBackdropFrame("BetterLootRollsOptionsFrame", UIParent)
     self.frame = frame
-    frame:SetSize(360, 245)
+    frame:SetSize(360, 305)
     frame:SetPoint("CENTER")
     frame:SetFrameStrata("FULLSCREEN_DIALOG")
     frame:SetClampedToScreen(true)
@@ -91,6 +93,26 @@ function Options:Initialize()
     scaleSlider.High:SetText("150%")
     scaleSlider.Text:SetText("")
 
+    local opacityLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    opacityLabel:SetPoint("TOPLEFT", 18, -198)
+    opacityLabel:SetText(ns.L.WINDOW_OPACITY)
+
+    local opacitySlider = CreateFrame("Slider", nil, frame, "OptionsSliderTemplate")
+    self.opacitySlider = opacitySlider
+    opacitySlider:SetPoint("TOPLEFT", opacityLabel, "BOTTOMLEFT", 4, -14)
+    opacitySlider:SetWidth(190)
+    opacitySlider:SetMinMaxValues(0.2, 1)
+    opacitySlider:SetValueStep(0.05)
+    opacitySlider:SetObeyStepOnDrag(true)
+    opacitySlider.Low:SetText("20%")
+    opacitySlider.High:SetText("100%")
+    opacitySlider.Text:SetText("")
+    opacitySlider:SetScript("OnValueChanged", function(_, value)
+        if ns.MainWindow.frame then
+            ns.MainWindow.frame:SetAlpha(value)
+        end
+    end)
+
     local applyButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
     applyButton:SetSize(80, 24)
     applyButton:SetPoint("BOTTOMRIGHT", -14, 14)
@@ -120,6 +142,11 @@ function Options:Initialize()
 
     frame:SetScript("OnShow", function()
         self:Refresh()
+    end)
+    frame:SetScript("OnHide", function()
+        if ns.MainWindow.frame then
+            ns.MainWindow.frame:SetAlpha(ns.Database:Get("opacity"))
+        end
     end)
 end
 

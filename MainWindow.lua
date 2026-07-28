@@ -47,9 +47,54 @@ local function GetChoiceColor(choice)
     return 0.75, 0.75, 0.75
 end
 
+local function TruncateUtf8(text, maxCharacters)
+    local byteIndex = 1
+    local characterCount = 0
+    local byteLength = #text
+
+    while byteIndex <= byteLength and characterCount < maxCharacters do
+        local firstByte = string.byte(text, byteIndex)
+        local characterBytes = 1
+        if firstByte >= 240 then
+            characterBytes = 4
+        elseif firstByte >= 224 then
+            characterBytes = 3
+        elseif firstByte >= 192 then
+            characterBytes = 2
+        end
+        byteIndex = byteIndex + characterBytes
+        characterCount = characterCount + 1
+    end
+
+    if byteIndex <= byteLength then
+        return string.sub(text, 1, byteIndex - 1) .. "…"
+    end
+    return text
+end
+
+local function GetCompactPlayerName(name)
+    if not name then
+        return ns.L.UNKNOWN
+    end
+
+    local shortName = type(Ambiguate) == "function" and Ambiguate(name, "short")
+        or string.match(name, "^([^-]+)")
+        or name
+    return TruncateUtf8(shortName, 9)
+end
+
+local function GetCompactChoice(choice)
+    if choice == "DISENCHANT" then
+        return "DE"
+    elseif choice == "WAITING" then
+        return "…"
+    end
+    return ns.L[choice] or ns.L.UNKNOWN
+end
+
 function MainWindow:CreatePlayerRow(card)
     local row = CreateFrame("Frame", nil, card)
-    row:SetHeight(17)
+    row:SetHeight(16)
 
     row.background = row:CreateTexture(nil, "BACKGROUND")
     row.background:SetAllPoints()
@@ -68,21 +113,32 @@ function MainWindow:CreatePlayerRow(card)
 end
 
 function MainWindow:CreateCard()
-    local card = CreateBackdropFrame("Button", nil, self.scrollChild)
-    SetBackdrop(card, { 0.045, 0.052, 0.065, 0.9 })
+    local card = CreateFrame("Button", nil, self.scrollChild)
     card:RegisterForClicks("LeftButtonUp")
 
+    card.headerBackground = card:CreateTexture(nil, "BACKGROUND")
+    card.headerBackground:SetPoint("TOPLEFT")
+    card.headerBackground:SetPoint("TOPRIGHT")
+    card.headerBackground:SetHeight(29)
+    card.headerBackground:SetColorTexture(0.075, 0.09, 0.115, 0.72)
+
+    card.separator = card:CreateTexture(nil, "BORDER")
+    card.separator:SetPoint("BOTTOMLEFT")
+    card.separator:SetPoint("BOTTOMRIGHT")
+    card.separator:SetHeight(1)
+    card.separator:SetColorTexture(0.18, 0.23, 0.3, 0.5)
+
     card.icon = card:CreateTexture(nil, "ARTWORK")
-    card.icon:SetSize(24, 24)
-    card.icon:SetPoint("TOPLEFT", 5, -5)
+    card.icon:SetSize(22, 22)
+    card.icon:SetPoint("TOPLEFT", 4, -4)
 
     card.itemName = card:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    card.itemName:SetPoint("LEFT", card.icon, "RIGHT", 6, 0)
+    card.itemName:SetPoint("LEFT", card.icon, "RIGHT", 4, 0)
     card.itemName:SetJustifyH("LEFT")
     card.itemName:SetWordWrap(false)
 
     card.status = card:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-    card.status:SetPoint("TOPRIGHT", -6, -8)
+    card.status:SetPoint("TOPRIGHT", -4, -7)
     card.status:SetJustifyH("RIGHT")
 
     card.playerRows = {}
@@ -108,27 +164,32 @@ function MainWindow:CreateCard()
 end
 
 function MainWindow:RenderPlayerRow(row, player, rowIndex, cardWidth)
+    local rowWidth = cardWidth - 8
+    local choiceWidth = 48
+    local rollWidth = 24
+    local nameWidth = math.max(54, rowWidth - choiceWidth - rollWidth - 2)
+
     row:ClearAllPoints()
-    row:SetPoint("TOPLEFT", 5, -33 - ((rowIndex - 1) * 17))
-    row:SetWidth(cardWidth - 10)
+    row:SetPoint("TOPLEFT", 4, -30 - ((rowIndex - 1) * 16))
+    row:SetWidth(rowWidth)
 
     row.name:ClearAllPoints()
-    row.name:SetPoint("LEFT", 2, 0)
-    row.name:SetWidth((cardWidth - 16) * 0.51)
+    row.name:SetPoint("LEFT", 1, 0)
+    row.name:SetWidth(nameWidth)
 
     row.choice:ClearAllPoints()
-    row.choice:SetPoint("LEFT", row.name, "RIGHT", 3, 0)
-    row.choice:SetWidth((cardWidth - 16) * 0.28)
+    row.choice:SetPoint("LEFT", row.name, "RIGHT", 1, 0)
+    row.choice:SetWidth(choiceWidth)
 
     row.roll:ClearAllPoints()
-    row.roll:SetPoint("RIGHT", -2, 0)
-    row.roll:SetWidth((cardWidth - 16) * 0.16)
+    row.roll:SetPoint("RIGHT", -1, 0)
+    row.roll:SetWidth(rollWidth)
 
     local prefix = player.isWinner and "|TInterface\\RaidFrame\\ReadyCheck-Ready:14:14|t " or ""
-    row.name:SetText(prefix .. (player.name or ns.L.UNKNOWN))
+    row.name:SetText(prefix .. GetCompactPlayerName(player.name))
     row.name:SetTextColor(GetClassColor(player.class))
 
-    row.choice:SetText(ns.L[player.choice] or ns.L.UNKNOWN)
+    row.choice:SetText(GetCompactChoice(player.choice))
     row.choice:SetTextColor(GetChoiceColor(player.choice))
 
     if player.roll then
@@ -143,7 +204,7 @@ end
 
 function MainWindow:RenderCard(card, record, topOffset, cardWidth)
     local playerCount = math.max(1, #record.players)
-    local cardHeight = 36 + (playerCount * 17)
+    local cardHeight = 33 + (playerCount * 16)
 
     card:ClearAllPoints()
     card:SetPoint("TOPLEFT", 0, -topOffset)
@@ -151,7 +212,7 @@ function MainWindow:RenderCard(card, record, topOffset, cardWidth)
     card.itemLink = record.itemLink
     card.icon:SetTexture(ns.ApiCompat:GetItemTexture(record.itemLink))
     card.itemName:SetText(record.itemLink or ns.L.UNKNOWN)
-    card.itemName:SetWidth(math.max(70, cardWidth - 145))
+    card.itemName:SetWidth(math.max(52, cardWidth - 105))
     card.status:SetText(record.isDone and ns.L.COMPLETE or ns.L.ACTIVE)
     card.status:SetTextColor(record.isDone and 0.65 or 0.3, record.isDone and 0.65 or 1, 0.3)
 
@@ -184,13 +245,13 @@ function MainWindow:Refresh()
     end
 
     local records = ns.RollTracker:GetDisplayRecords()
-    local cardWidth = math.max(246, self.frame:GetWidth() - 34)
+    local cardWidth = math.max(186, self.frame:GetWidth() - 16)
     local offset = 0
 
     for index, record in ipairs(records) do
         local card = self.cards[index] or self:CreateCard()
         self.cards[index] = card
-        offset = offset + self:RenderCard(card, record, offset, cardWidth) + 3
+        offset = offset + self:RenderCard(card, record, offset, cardWidth) + 1
     end
 
     for index = #records + 1, #self.cards do
@@ -199,6 +260,25 @@ function MainWindow:Refresh()
 
     self.emptyText:SetShown(#records == 0)
     self.scrollChild:SetSize(cardWidth, math.max(1, offset))
+    self:UpdateScrollBar()
+end
+
+function MainWindow:UpdateScrollBar()
+    if not self.scrollFrame or not self.scrollBar then
+        return
+    end
+
+    local maxScroll = math.max(
+        0,
+        self.scrollChild:GetHeight() - self.scrollFrame:GetHeight()
+    )
+    local currentScroll = math.min(self.scrollFrame:GetVerticalScroll() or 0, maxScroll)
+    self.maxScroll = maxScroll
+
+    self.scrollBar:SetMinMaxValues(0, math.max(1, maxScroll))
+    self.scrollBar:SetValue(maxScroll - currentScroll)
+    self.scrollBar:SetShown(maxScroll > 0)
+    self.scrollTrack:SetShown(maxScroll > 0)
 end
 
 function MainWindow:SaveGeometry()
@@ -219,6 +299,7 @@ function MainWindow:ApplySettings()
     local frame = self.frame
 
     frame:SetScale(settings.scale)
+    frame:SetAlpha(settings.opacity)
     frame:SetSize(settings.width, settings.height)
     frame:ClearAllPoints()
     frame:SetPoint(
@@ -304,20 +385,45 @@ function MainWindow:Initialize()
     divider:SetPoint("TOPRIGHT", -1, -22)
     divider:SetHeight(1)
 
-    local scrollFrame = CreateFrame(
-        "ScrollFrame",
-        "BetterLootRollsScrollFrame",
-        frame,
-        "UIPanelScrollFrameTemplate"
-    )
+    local scrollFrame = CreateFrame("ScrollFrame", "BetterLootRollsScrollFrame", frame)
     self.scrollFrame = scrollFrame
-    scrollFrame:SetPoint("TOPLEFT", 5, -27)
-    scrollFrame:SetPoint("BOTTOMRIGHT", -22, 7)
+    scrollFrame:SetPoint("TOPLEFT", 11, -25)
+    scrollFrame:SetPoint("BOTTOMRIGHT", -5, 7)
+    scrollFrame:EnableMouseWheel(true)
 
     local scrollChild = CreateFrame("Frame", nil, scrollFrame)
     self.scrollChild = scrollChild
     scrollChild:SetSize(1, 1)
     scrollFrame:SetScrollChild(scrollChild)
+
+    local scrollBar = CreateFrame("Slider", nil, frame)
+    self.scrollBar = scrollBar
+    scrollBar:SetOrientation("VERTICAL")
+    scrollBar:SetWidth(4)
+    scrollBar:SetPoint("TOPLEFT", 4, -28)
+    scrollBar:SetPoint("BOTTOMLEFT", 4, 9)
+    scrollBar:SetValueStep(1)
+    scrollBar:SetThumbTexture("Interface\\Buttons\\WHITE8X8")
+    local thumb = scrollBar:GetThumbTexture()
+    thumb:SetSize(4, 24)
+    thumb:SetColorTexture(0.36, 0.57, 0.82, 0.9)
+
+    local scrollTrack = frame:CreateTexture(nil, "BACKGROUND")
+    self.scrollTrack = scrollTrack
+    scrollTrack:SetWidth(2)
+    scrollTrack:SetPoint("TOP", scrollBar, "TOP")
+    scrollTrack:SetPoint("BOTTOM", scrollBar, "BOTTOM")
+    scrollTrack:SetColorTexture(0.18, 0.22, 0.28, 0.5)
+
+    scrollBar:SetScript("OnValueChanged", function(_, value)
+        scrollFrame:SetVerticalScroll(math.max(0, (self.maxScroll or 0) - value))
+    end)
+    scrollFrame:SetScript("OnMouseWheel", function(_, delta)
+        local maxScroll = self.maxScroll or 0
+        local currentScroll = scrollFrame:GetVerticalScroll() or 0
+        local targetScroll = math.max(0, math.min(maxScroll, currentScroll - (delta * 32)))
+        scrollBar:SetValue(maxScroll - targetScroll)
+    end)
 
     local emptyText = frame:CreateFontString(nil, "OVERLAY", "GameFontDisable")
     self.emptyText = emptyText

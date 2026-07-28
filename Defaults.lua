@@ -3,20 +3,21 @@ local _, ns = ...
 ns.Constants = {
     MIN_HISTORY = 5,
     MAX_HISTORY = 100,
-    MIN_WIDTH = 280,
+    MIN_WIDTH = 220,
     MAX_WIDTH = 900,
-    MIN_HEIGHT = 150,
+    MIN_HEIGHT = 130,
     MAX_HEIGHT = 800,
 }
 
 ns.Defaults = {
-    schemaVersion = 2,
+    schemaVersion = 3,
     settings = {
         historyLimit = 20,
         autoShow = true,
         scale = 1,
-        width = 360,
-        height = 260,
+        opacity = 1,
+        width = 300,
+        height = 240,
         position = {
             point = "CENTER",
             relativePoint = "CENTER",

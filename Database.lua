@@ -52,6 +52,14 @@ local function Migrate(data)
             data.settings.height = ns.Defaults.settings.height
         end
     end
+    if schemaVersion and schemaVersion < 3 and type(data.settings) == "table" then
+        if data.settings.width == 360 then
+            data.settings.width = ns.Defaults.settings.width
+        end
+        if data.settings.height == 260 then
+            data.settings.height = ns.Defaults.settings.height
+        end
+    end
 end
 
 function Database:Initialize()
@@ -78,6 +86,7 @@ function Database:Validate()
         defaults.historyLimit
     ))
     settings.scale = Clamp(settings.scale, 0.75, 1.5, defaults.scale)
+    settings.opacity = Clamp(settings.opacity, 0.2, 1, defaults.opacity)
     settings.width = Clamp(
         settings.width,
         constants.MIN_WIDTH,
@@ -152,5 +161,6 @@ function Database:ResetWindow()
     self.data.settings.width = defaults.width
     self.data.settings.height = defaults.height
     self.data.settings.scale = defaults.scale
+    self.data.settings.opacity = defaults.opacity
     self.data.settings.position = CopyTable(defaults.position)
 end
