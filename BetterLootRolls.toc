@@ -7,4 +7,12 @@
 ## X-Flavor: Vanilla
 ## AllowLoadGameType: vanilla
 
+Locales\enUS.lua
+Defaults.lua
+ApiCompat.lua
+Database.lua
+RollTracker.lua
+MainWindow.lua
+Options.lua
+SlashCommands.lua
 Core.lua

@@ -1,0 +1,27 @@
+local _, ns = ...
+
+ns.L = {
+    TITLE = "Better Loot Rolls",
+    ACTIVE = "Rolling",
+    COMPLETE = "Complete",
+    ALL_PASSED = "Everyone passed",
+    WAITING = "Waiting",
+    WINNER = "Winner",
+    NEED = "Need",
+    GREED = "Greed",
+    DISENCHANT = "Disenchant",
+    PASS = "Pass",
+    UNKNOWN = "Unknown",
+    NO_ROLLS = "No recent group loot rolls.",
+    OPTIONS = "Options",
+    HISTORY_LIMIT = "Completed rolls to keep",
+    AUTO_SHOW = "Open for a new roll",
+    WINDOW_SCALE = "Window scale",
+    APPLY = "Apply",
+    CLEAR_HISTORY = "Clear history",
+    RESET_WINDOW = "Reset window",
+    UNSUPPORTED = "This client does not provide the required Classic loot history API.",
+    HISTORY_SET = "History limit set to %d.",
+    HISTORY_CLEARED = "Recent roll history cleared.",
+    USAGE = "Commands: /blr, /blr options, /blr history 5-100, /blr clear, /blr reset, /blr api",
+}
