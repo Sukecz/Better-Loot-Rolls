@@ -1,6 +1,6 @@
 # Compatibility
 
-## v0.1.0-alpha.1
+## v0.1.0-alpha.2
 
 - Targets: World of Warcraft Classic Era, Classic Hardcore, and Burning
   Crusade Classic Anniversary

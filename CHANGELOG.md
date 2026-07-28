@@ -4,6 +4,13 @@ All notable changes to Better Loot Rolls will be documented in this file.
 
 ## [Unreleased]
 
+## [0.1.0-alpha.2] - 2026-07-28
+
+### Added
+
+- Shared Classic Era/Hardcore and TBC Classic Anniversary support.
+- CurseForge project metadata for automated alpha publication.
+
 ## [0.1.0-alpha.1] - 2026-07-28
 
 ### Added
@@ -16,4 +23,3 @@ All notable changes to Better Loot Rolls will be documented in this file.
 - `/blr` commands for display, configuration, clearing, reset, and diagnostics.
 - Lua 5.1 syntax, TOC, database, and roll-tracker tests.
 - Better Loot Rolls artwork in the addon list and window title.
-- Shared Classic Era/Hardcore and TBC Classic Anniversary support.
