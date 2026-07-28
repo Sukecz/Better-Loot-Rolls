@@ -16,15 +16,14 @@ local function SetBackdrop(frame, color)
     end
 
     frame:SetBackdrop({
-        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-        tile = true,
-        tileSize = 16,
-        edgeSize = 12,
-        insets = { left = 3, right = 3, top = 3, bottom = 3 },
+        bgFile = "Interface\\Buttons\\WHITE8X8",
+        edgeFile = "Interface\\Buttons\\WHITE8X8",
+        tile = false,
+        edgeSize = 1,
+        insets = { left = 1, right = 1, top = 1, bottom = 1 },
     })
     frame:SetBackdropColor(color[1], color[2], color[3], color[4])
-    frame:SetBackdropBorderColor(0.35, 0.35, 0.35, 1)
+    frame:SetBackdropBorderColor(0.18, 0.22, 0.28, 1)
 end
 
 local function GetClassColor(class)
@@ -50,7 +49,7 @@ end
 
 function MainWindow:CreatePlayerRow(card)
     local row = CreateFrame("Frame", nil, card)
-    row:SetHeight(20)
+    row:SetHeight(17)
 
     row.background = row:CreateTexture(nil, "BACKGROUND")
     row.background:SetAllPoints()
@@ -70,20 +69,20 @@ end
 
 function MainWindow:CreateCard()
     local card = CreateBackdropFrame("Button", nil, self.scrollChild)
-    SetBackdrop(card, { 0.035, 0.035, 0.035, 0.92 })
+    SetBackdrop(card, { 0.045, 0.052, 0.065, 0.9 })
     card:RegisterForClicks("LeftButtonUp")
 
     card.icon = card:CreateTexture(nil, "ARTWORK")
-    card.icon:SetSize(32, 32)
-    card.icon:SetPoint("TOPLEFT", 8, -8)
+    card.icon:SetSize(24, 24)
+    card.icon:SetPoint("TOPLEFT", 5, -5)
 
-    card.itemName = card:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    card.itemName:SetPoint("TOPLEFT", card.icon, "TOPRIGHT", 8, -1)
+    card.itemName = card:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    card.itemName:SetPoint("LEFT", card.icon, "RIGHT", 6, 0)
     card.itemName:SetJustifyH("LEFT")
     card.itemName:SetWordWrap(false)
 
     card.status = card:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-    card.status:SetPoint("TOPRIGHT", -8, -10)
+    card.status:SetPoint("TOPRIGHT", -6, -8)
     card.status:SetJustifyH("RIGHT")
 
     card.playerRows = {}
@@ -110,20 +109,20 @@ end
 
 function MainWindow:RenderPlayerRow(row, player, rowIndex, cardWidth)
     row:ClearAllPoints()
-    row:SetPoint("TOPLEFT", 8, -44 - ((rowIndex - 1) * 20))
-    row:SetWidth(cardWidth - 16)
+    row:SetPoint("TOPLEFT", 5, -33 - ((rowIndex - 1) * 17))
+    row:SetWidth(cardWidth - 10)
 
     row.name:ClearAllPoints()
-    row.name:SetPoint("LEFT", 3, 0)
-    row.name:SetWidth((cardWidth - 22) * 0.52)
+    row.name:SetPoint("LEFT", 2, 0)
+    row.name:SetWidth((cardWidth - 16) * 0.51)
 
     row.choice:ClearAllPoints()
-    row.choice:SetPoint("LEFT", row.name, "RIGHT", 4, 0)
-    row.choice:SetWidth((cardWidth - 22) * 0.27)
+    row.choice:SetPoint("LEFT", row.name, "RIGHT", 3, 0)
+    row.choice:SetWidth((cardWidth - 16) * 0.28)
 
     row.roll:ClearAllPoints()
-    row.roll:SetPoint("RIGHT", -4, 0)
-    row.roll:SetWidth((cardWidth - 22) * 0.16)
+    row.roll:SetPoint("RIGHT", -2, 0)
+    row.roll:SetWidth((cardWidth - 16) * 0.16)
 
     local prefix = player.isWinner and "|TInterface\\RaidFrame\\ReadyCheck-Ready:14:14|t " or ""
     row.name:SetText(prefix .. (player.name or ns.L.UNKNOWN))
@@ -144,7 +143,7 @@ end
 
 function MainWindow:RenderCard(card, record, topOffset, cardWidth)
     local playerCount = math.max(1, #record.players)
-    local cardHeight = 50 + (playerCount * 20)
+    local cardHeight = 36 + (playerCount * 17)
 
     card:ClearAllPoints()
     card:SetPoint("TOPLEFT", 0, -topOffset)
@@ -152,7 +151,7 @@ function MainWindow:RenderCard(card, record, topOffset, cardWidth)
     card.itemLink = record.itemLink
     card.icon:SetTexture(ns.ApiCompat:GetItemTexture(record.itemLink))
     card.itemName:SetText(record.itemLink or ns.L.UNKNOWN)
-    card.itemName:SetWidth(math.max(80, cardWidth - 190))
+    card.itemName:SetWidth(math.max(70, cardWidth - 145))
     card.status:SetText(record.isDone and ns.L.COMPLETE or ns.L.ACTIVE)
     card.status:SetTextColor(record.isDone and 0.65 or 0.3, record.isDone and 0.65 or 1, 0.3)
 
@@ -185,13 +184,13 @@ function MainWindow:Refresh()
     end
 
     local records = ns.RollTracker:GetDisplayRecords()
-    local cardWidth = math.max(280, self.frame:GetWidth() - 52)
+    local cardWidth = math.max(246, self.frame:GetWidth() - 34)
     local offset = 0
 
     for index, record in ipairs(records) do
         local card = self.cards[index] or self:CreateCard()
         self.cards[index] = card
-        offset = offset + self:RenderCard(card, record, offset, cardWidth) + 6
+        offset = offset + self:RenderCard(card, record, offset, cardWidth) + 3
     end
 
     for index = #records + 1, #self.cards do
@@ -240,7 +239,7 @@ function MainWindow:Initialize()
     local settings = ns.Database.data.settings
     local frame = CreateBackdropFrame("Frame", "BetterLootRollsFrame", UIParent)
     self.frame = frame
-    SetBackdrop(frame, { 0.015, 0.015, 0.015, 0.96 })
+    SetBackdrop(frame, { 0.018, 0.022, 0.029, 0.96 })
     frame:SetFrameStrata("DIALOG")
     frame:SetClampedToScreen(true)
     frame:SetMovable(true)
@@ -257,30 +256,38 @@ function MainWindow:Initialize()
         frame:SetMaxResize(ns.Constants.MAX_WIDTH, ns.Constants.MAX_HEIGHT)
     end
 
-    local addonIcon = frame:CreateTexture(nil, "ARTWORK")
-    addonIcon:SetSize(25, 25)
-    addonIcon:SetPoint("TOPLEFT", 10, -7)
-    addonIcon:SetTexture("Interface\\AddOns\\BetterLootRolls\\assets\\logo")
-
-    local title = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-    title:SetPoint("LEFT", addonIcon, "RIGHT", 6, 0)
-    title:SetText(ns.L.TITLE)
-
     local closeButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
-    closeButton:SetPoint("TOPRIGHT", 2, 2)
+    closeButton:SetSize(20, 20)
+    closeButton:SetPoint("TOPRIGHT", 1, 0)
 
-    local optionsButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
-    optionsButton:SetSize(74, 22)
-    optionsButton:SetPoint("TOPRIGHT", closeButton, "TOPLEFT", 2, -5)
-    optionsButton:SetText(ns.L.OPTIONS)
+    local optionsButton = CreateFrame("Button", nil, frame)
+    optionsButton:SetSize(16, 16)
+    optionsButton:SetPoint("RIGHT", closeButton, "LEFT", -1, 0)
+    optionsButton:SetNormalTexture("Interface\\Buttons\\UI-OptionsButton")
+    optionsButton:SetHighlightTexture("Interface\\Buttons\\UI-OptionsButton")
+    optionsButton:GetHighlightTexture():SetAlpha(0.35)
     optionsButton:SetScript("OnClick", function()
         ns.Options:Show()
     end)
+    optionsButton:SetScript("OnEnter", function(button)
+        GameTooltip:SetOwner(button, "ANCHOR_TOP")
+        GameTooltip:SetText(ns.L.OPTIONS)
+        GameTooltip:Show()
+    end)
+    optionsButton:SetScript("OnLeave", function()
+        GameTooltip:Hide()
+    end)
+
+    local topBar = frame:CreateTexture(nil, "BACKGROUND")
+    topBar:SetColorTexture(0.09, 0.11, 0.14, 0.72)
+    topBar:SetPoint("TOPLEFT", 1, -1)
+    topBar:SetPoint("TOPRIGHT", -1, -1)
+    topBar:SetHeight(21)
 
     local dragArea = CreateFrame("Frame", nil, frame)
-    dragArea:SetPoint("TOPLEFT", 4, -4)
-    dragArea:SetPoint("TOPRIGHT", optionsButton, "TOPLEFT", -4, 0)
-    dragArea:SetHeight(34)
+    dragArea:SetPoint("TOPLEFT", 2, -2)
+    dragArea:SetPoint("TOPRIGHT", optionsButton, "TOPLEFT", -2, 0)
+    dragArea:SetHeight(19)
     dragArea:EnableMouse(true)
     dragArea:RegisterForDrag("LeftButton")
     dragArea:SetScript("OnDragStart", function()
@@ -292,9 +299,9 @@ function MainWindow:Initialize()
     end)
 
     local divider = frame:CreateTexture(nil, "ARTWORK")
-    divider:SetColorTexture(0.45, 0.45, 0.45, 0.5)
-    divider:SetPoint("TOPLEFT", 9, -39)
-    divider:SetPoint("TOPRIGHT", -9, -39)
+    divider:SetColorTexture(0.25, 0.32, 0.42, 0.55)
+    divider:SetPoint("TOPLEFT", 1, -22)
+    divider:SetPoint("TOPRIGHT", -1, -22)
     divider:SetHeight(1)
 
     local scrollFrame = CreateFrame(
@@ -304,8 +311,8 @@ function MainWindow:Initialize()
         "UIPanelScrollFrameTemplate"
     )
     self.scrollFrame = scrollFrame
-    scrollFrame:SetPoint("TOPLEFT", 10, -48)
-    scrollFrame:SetPoint("BOTTOMRIGHT", -31, 14)
+    scrollFrame:SetPoint("TOPLEFT", 5, -27)
+    scrollFrame:SetPoint("BOTTOMRIGHT", -22, 7)
 
     local scrollChild = CreateFrame("Frame", nil, scrollFrame)
     self.scrollChild = scrollChild
@@ -318,8 +325,8 @@ function MainWindow:Initialize()
     emptyText:SetText(ns.L.NO_ROLLS)
 
     local resizeButton = CreateFrame("Button", nil, frame)
-    resizeButton:SetSize(18, 18)
-    resizeButton:SetPoint("BOTTOMRIGHT", -2, 2)
+    resizeButton:SetSize(13, 13)
+    resizeButton:SetPoint("BOTTOMRIGHT", -1, 1)
     resizeButton:SetNormalTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Up")
     resizeButton:SetHighlightTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Highlight")
     resizeButton:SetPushedTexture("Interface\\ChatFrame\\UI-ChatIM-SizeGrabber-Down")

@@ -40,12 +40,28 @@ local function MergeDefaults(target, defaults)
     end
 end
 
+local function Migrate(data)
+    local schemaVersion = tonumber(data.schemaVersion)
+    if schemaVersion and schemaVersion < 2 and type(data.settings) == "table" then
+        -- Preserve custom geometry. Only replace the original alpha defaults
+        -- with the new compact defaults.
+        if data.settings.width == 460 then
+            data.settings.width = ns.Defaults.settings.width
+        end
+        if data.settings.height == 360 then
+            data.settings.height = ns.Defaults.settings.height
+        end
+    end
+end
+
 function Database:Initialize()
     if type(BetterLootRollsDB) ~= "table" then
         BetterLootRollsDB = {}
     end
 
+    Migrate(BetterLootRollsDB)
     MergeDefaults(BetterLootRollsDB, ns.Defaults)
+    BetterLootRollsDB.schemaVersion = ns.Defaults.schemaVersion
     self.data = BetterLootRollsDB
     self:Validate()
 end

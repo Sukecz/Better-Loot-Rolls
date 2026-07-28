@@ -4,6 +4,11 @@ All notable changes to Better Loot Rolls will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Reworked the main roll window into a compact modern panel with a minimal
+  icon-only header and denser item and player rows.
+
 ## [0.1.0-alpha.2] - 2026-07-28
 
 ### Added
