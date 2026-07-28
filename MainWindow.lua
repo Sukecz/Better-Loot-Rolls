@@ -257,8 +257,13 @@ function MainWindow:Initialize()
         frame:SetMaxResize(ns.Constants.MAX_WIDTH, ns.Constants.MAX_HEIGHT)
     end
 
+    local addonIcon = frame:CreateTexture(nil, "ARTWORK")
+    addonIcon:SetSize(25, 25)
+    addonIcon:SetPoint("TOPLEFT", 10, -7)
+    addonIcon:SetTexture("Interface\\AddOns\\BetterLootRolls\\assets\\logo")
+
     local title = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-    title:SetPoint("TOPLEFT", 14, -13)
+    title:SetPoint("LEFT", addonIcon, "RIGHT", 6, 0)
     title:SetText(ns.L.TITLE)
 
     local closeButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton")

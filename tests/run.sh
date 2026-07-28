@@ -45,5 +45,7 @@ grep -qx '## Interface: 11509' BetterLootRolls.toc
 grep -qx '## Version: 0.1.0' BetterLootRolls.toc
 grep -qx '## X-Flavor: Vanilla' BetterLootRolls.toc
 grep -qx '## AllowLoadGameType: vanilla' BetterLootRolls.toc
+grep -Fqx '## IconTexture: Interface\AddOns\BetterLootRolls\assets\logo' BetterLootRolls.toc
+test -f assets/logo.png
 
 echo "All Lua 5.1 and TOC checks passed."

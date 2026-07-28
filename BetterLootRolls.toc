@@ -6,6 +6,7 @@
 ## SavedVariables: BetterLootRollsDB
 ## X-Flavor: Vanilla
 ## AllowLoadGameType: vanilla
+## IconTexture: Interface\AddOns\BetterLootRolls\assets\logo
 
 Locales\enUS.lua
 Defaults.lua

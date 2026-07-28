@@ -5,6 +5,9 @@ Warcraft Classic Era and Classic Hardcore. It presents the same server-provided
 roll information as Blizzard's `/loot` window in a movable, fully resizable
 view.
 
+The included Better Loot Rolls artwork is used in the WoW addon list and in the
+window title.
+
 For each recent item it shows:
 
 - the item icon and link;

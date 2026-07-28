@@ -13,3 +13,4 @@ All notable changes to Better Loot Rolls will be documented in this file.
 - Options for automatic opening, history size, and window scale.
 - `/blr` commands for display, configuration, clearing, reset, and diagnostics.
 - Lua 5.1 syntax, TOC, database, and roll-tracker tests.
+- Better Loot Rolls artwork in the addon list and window title.
