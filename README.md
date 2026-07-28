@@ -57,7 +57,7 @@ verification is still required before a public release.
 
 Source code and issue tracking:
 
-https://github.com/Sukecz/BetterLootRolls
+https://github.com/Sukecz/Better-Loot-Rolls
 
 ## Development
 

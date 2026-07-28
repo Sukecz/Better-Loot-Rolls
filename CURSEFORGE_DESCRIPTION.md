@@ -56,4 +56,4 @@ Restart the game or run `/reload`, then use `/blr`.
 
 Source code and issue tracking:
 
-https://github.com/Sukecz/BetterLootRolls
+https://github.com/Sukecz/Better-Loot-Rolls
