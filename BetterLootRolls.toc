@@ -1,0 +1,10 @@
+## Interface: 11509
+## Title: Better Loot Rolls
+## Notes: A configurable recent history of group loot rolls for WoW Classic Era.
+## Author: Better Loot Rolls Authors
+## Version: 0.1.0
+## SavedVariables: BetterLootRollsDB
+## X-Flavor: Vanilla
+## AllowLoadGameType: vanilla
+
+Core.lua

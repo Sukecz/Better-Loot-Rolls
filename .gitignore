@@ -1,0 +1,21 @@
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.bak
+*.tmp
+.vscode/
+.idea/
+
+# Local build artifacts
+*.zip
+.release/
+tmp/
+
+# Local instructions and credentials are not packaged.
+AGENTS.md
+.env
+.env.*
+!.env.example
+secrets.lua
+secrets*.lua
