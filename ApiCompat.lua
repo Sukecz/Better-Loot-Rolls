@@ -4,8 +4,12 @@ local ApiCompat = {}
 ns.ApiCompat = ApiCompat
 
 function ApiCompat:IsSupported()
-    local isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
-    return isClassic
+    local isClassicEra = WOW_PROJECT_CLASSIC
+        and WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+    local isTBCClassic = WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+        and WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+
+    return (isClassicEra or isTBCClassic)
         and type(C_LootHistory) == "table"
         and type(C_LootHistory.GetNumItems) == "function"
         and type(C_LootHistory.GetItem) == "function"

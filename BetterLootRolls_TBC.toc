@@ -1,11 +1,11 @@
-## Interface: 11509
+## Interface: 20506
 ## Title: Better Loot Rolls
 ## Notes: A configurable recent history of group loot rolls for WoW Classic Era and TBC Classic.
 ## Author: Better Loot Rolls Authors
 ## Version: 0.1.0-alpha.1
 ## SavedVariables: BetterLootRollsDB
-## X-Flavor: Vanilla
-## AllowLoadGameType: vanilla
+## X-Flavor: TBC
+## AllowLoadGameType: tbc
 ## IconTexture: Interface\AddOns\BetterLootRolls\assets\logo
 
 Locales\enUS.lua

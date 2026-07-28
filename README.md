@@ -1,9 +1,9 @@
 # Better Loot Rolls
 
 Better Loot Rolls is a lightweight group-loot history window for World of
-Warcraft Classic Era and Classic Hardcore. It presents the same server-provided
-roll information as Blizzard's `/loot` window in a movable, fully resizable
-view.
+Warcraft Classic Era, Classic Hardcore, and TBC Classic Anniversary. It
+presents the same server-provided roll information as Blizzard's `/loot`
+window in a movable, fully resizable view.
 
 The included Better Loot Rolls artwork is used in the WoW addon list and in the
 window title.
@@ -26,10 +26,11 @@ window and never automates a loot choice.
 
 ## Installation
 
-Copy the addon as:
+Copy the addon as `BetterLootRolls` into the matching client:
 
 ```text
 World of Warcraft/_classic_era_/Interface/AddOns/BetterLootRolls/
+World of Warcraft/_classic_/Interface/AddOns/BetterLootRolls/
 ```
 
 After logging in, use `/blr` to toggle the window.
@@ -49,9 +50,10 @@ stored account-wide.
 
 ## Current verification status
 
-The source targets Classic Era interface `11509` and the API shape present in
-Classic Era 1.15.9. Offline Lua 5.1 and model tests are included. In-game
-verification is still required before a public release.
+The source targets Classic Era interface `11509` and TBC interface `20506`,
+using the shared `C_LootHistory` API shapes present in Era 1.15.9 and TBC
+2.5.6. Offline Lua 5.1 and model tests are included. In-game verification in
+both clients is still required before a stable release.
 
 ## Support
 

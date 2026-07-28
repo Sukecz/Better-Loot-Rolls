@@ -1,7 +1,7 @@
 # Better Loot Rolls
 
 Better Loot Rolls is a lightweight and configurable replacement view for the
-information shown by World of Warcraft Classic Era's built-in `/loot` history
+information shown by World of Warcraft Classic's built-in `/loot` history
 window.
 
 It keeps recent group loot rolls readable without turning them into a
@@ -37,8 +37,10 @@ Master Loot actions.
 
 ## Client coverage
 
-This alpha targets World of Warcraft Classic Era, including Hardcore realms,
-with interface version `11509`.
+This alpha targets:
+
+- World of Warcraft Classic Era, including Hardcore realms (`1.15.9`);
+- World of Warcraft: Burning Crusade Classic Anniversary (`2.5.6`).
 
 This is an early alpha intended for practical in-game validation. Please report
 the exact client build, locale, reproduction steps, and `/blr api` output with

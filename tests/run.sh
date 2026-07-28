@@ -33,19 +33,32 @@ for test_file in tests/test_*.lua; do
     fi
 done
 
+vanilla_files="$(sed -n '/^[^#[:space:]].*\.lua$/p' BetterLootRolls.toc)"
+tbc_files="$(sed -n '/^[^#[:space:]].*\.lua$/p' BetterLootRolls_TBC.toc)"
+
+if [[ "$vanilla_files" != "$tbc_files" ]]; then
+    echo "TOC Lua load orders differ between Vanilla and TBC." >&2
+    exit 1
+fi
+
 while IFS= read -r toc_file; do
     source_file="${toc_file//\\//}"
     if [[ ! -f "$source_file" ]]; then
         echo "TOC references missing file: $source_file" >&2
         exit 1
     fi
-done < <(sed -n '/^[^#[:space:]].*\.lua$/p' BetterLootRolls.toc)
+done <<< "$vanilla_files"
 
 grep -qx '## Interface: 11509' BetterLootRolls.toc
 grep -qx '## Version: 0.1.0-alpha.1' BetterLootRolls.toc
 grep -qx '## X-Flavor: Vanilla' BetterLootRolls.toc
 grep -qx '## AllowLoadGameType: vanilla' BetterLootRolls.toc
 grep -Fqx '## IconTexture: Interface\AddOns\BetterLootRolls\assets\logo' BetterLootRolls.toc
+grep -qx '## Interface: 20506' BetterLootRolls_TBC.toc
+grep -qx '## Version: 0.1.0-alpha.1' BetterLootRolls_TBC.toc
+grep -qx '## X-Flavor: TBC' BetterLootRolls_TBC.toc
+grep -qx '## AllowLoadGameType: tbc' BetterLootRolls_TBC.toc
+grep -Fqx '## IconTexture: Interface\AddOns\BetterLootRolls\assets\logo' BetterLootRolls_TBC.toc
 test -f assets/logo.png
 
 echo "All Lua 5.1 and TOC checks passed."
