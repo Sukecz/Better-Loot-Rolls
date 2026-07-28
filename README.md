@@ -53,6 +53,12 @@ The source targets Classic Era interface `11509` and the API shape present in
 Classic Era 1.15.9. Offline Lua 5.1 and model tests are included. In-game
 verification is still required before a public release.
 
+## Support
+
+Source code and issue tracking:
+
+https://github.com/Sukecz/BetterLootRolls
+
 ## Development
 
 Run the local checks with:

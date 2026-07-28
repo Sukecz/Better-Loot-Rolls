@@ -4,6 +4,8 @@ All notable changes to Better Loot Rolls will be documented in this file.
 
 ## [Unreleased]
 
+## [0.1.0-alpha.1] - 2026-07-28
+
 ### Added
 
 - Initial Classic Era addon project structure.

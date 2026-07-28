@@ -42,7 +42,7 @@ while IFS= read -r toc_file; do
 done < <(sed -n '/^[^#[:space:]].*\.lua$/p' BetterLootRolls.toc)
 
 grep -qx '## Interface: 11509' BetterLootRolls.toc
-grep -qx '## Version: 0.1.0' BetterLootRolls.toc
+grep -qx '## Version: 0.1.0-alpha.1' BetterLootRolls.toc
 grep -qx '## X-Flavor: Vanilla' BetterLootRolls.toc
 grep -qx '## AllowLoadGameType: vanilla' BetterLootRolls.toc
 grep -Fqx '## IconTexture: Interface\AddOns\BetterLootRolls\assets\logo' BetterLootRolls.toc

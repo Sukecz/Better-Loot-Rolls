@@ -1,0 +1,15 @@
+package-as: BetterLootRolls
+manual-changelog: CHANGELOG.md
+
+ignore:
+  - .git
+  - .github
+  - .gitignore
+  - .release
+  - .env
+  - .env.*
+  - AGENTS.md
+  - COMPATIBILITY.md
+  - CURSEFORGE_DESCRIPTION.md
+  - tests
+  - "*.code-workspace"
