@@ -316,11 +316,9 @@ function MainWindow:RenderCard(card, record, topOffset, cardWidth)
     card.itemLink = record.itemLink
     card.expandIndicator:SetText(isExpanded and "-" or "+")
     card.icon:SetTexture(ns.ApiCompat:GetItemTexture(record.itemLink))
-    card.itemName:SetText(record.itemLink or ns.L.UNKNOWN)
     local ownChoiceTexture = ns.ApiCompat:GetChoiceTexture(self:GetOwnChoice(record))
     card.ownChoiceIcon:SetTexture(ownChoiceTexture)
     card.ownChoiceIcon:SetShown(ownChoiceTexture ~= nil)
-    card.itemName:SetWidth(math.max(48, cardWidth - (ownChoiceTexture and 153 or 135)))
     local statusText, statusRed, statusGreen, statusBlue = self:GetRecordSummary(record)
     card.status:ClearAllPoints()
     if ownChoiceTexture then
@@ -330,6 +328,10 @@ function MainWindow:RenderCard(card, record, topOffset, cardWidth)
     end
     card.status:SetText(statusText)
     card.status:SetTextColor(statusRed, statusGreen, statusBlue)
+    card.itemName:ClearAllPoints()
+    card.itemName:SetPoint("LEFT", card.icon, "RIGHT", 4, 0)
+    card.itemName:SetPoint("RIGHT", card.status, "LEFT", -4, 0)
+    card.itemName:SetText(record.itemLink or ns.L.UNKNOWN)
 
     if not isExpanded then
         for playerIndex = 1, #card.playerRows do
@@ -367,7 +369,10 @@ function MainWindow:Refresh()
 
     local records = ns.RollTracker:GetDisplayRecords()
     self:PreserveExpandedState(records)
-    local cardWidth = math.max(186, self.frame:GetWidth() - 22)
+    local cardWidth = math.max(
+        ns.Constants.MIN_WIDTH - 22,
+        self.frame:GetWidth() - 22
+    )
     local offset = 0
     local visibleRecordKeys = {}
 
