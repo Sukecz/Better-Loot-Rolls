@@ -4,6 +4,8 @@ All notable changes to Better Loot Rolls will be documented in this file.
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-07-29
+
 ### Changed
 
 - Reworked the main roll window into a compact modern panel with a minimal

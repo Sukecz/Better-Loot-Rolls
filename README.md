@@ -59,8 +59,8 @@ when its winner is announced.
 
 The source targets Classic Era interface `11509` and TBC interface `20506`,
 using the shared `C_LootHistory` API shapes present in Era 1.15.9 and TBC
-2.5.6. Offline Lua 5.1 and model tests are included. In-game verification in
-both clients is still required before a stable release.
+2.5.6. Offline Lua 5.1 and model tests are included; live-client behavior is
+not covered by the automated test suite.
 
 ## Support
 
