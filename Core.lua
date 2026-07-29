@@ -17,14 +17,8 @@ function Core:Refresh()
     ns.RollTracker:Refresh()
 end
 
-function Core:ShowWelcomeIfNeeded()
-    if ns.Database:Get("welcomeShown") then
-        return false
-    end
-
+function Core:ShowWelcome()
     PrintWelcome(ns.L.WELCOME_MESSAGE)
-    ns.Database:Set("welcomeShown", true)
-    return true
 end
 
 function Core:Show()
@@ -87,7 +81,7 @@ function Core:OnEvent(event, ...)
 
     if event == "PLAYER_LOGIN" then
         self:Refresh()
-        self:ShowWelcomeIfNeeded()
+        self:ShowWelcome()
     elseif event == "LOOT_HISTORY_AUTO_SHOW" then
         self:Refresh()
         if ns.Database:Get("autoShow") then

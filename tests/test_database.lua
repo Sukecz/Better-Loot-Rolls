@@ -26,7 +26,6 @@ assert(ns.Database:Get("opacity") == 1)
 assert(ns.Database:Get("width") == 220)
 assert(ns.Database:Get("height") == 800)
 assert(ns.Database:Get("autoShow") == false)
-assert(ns.Database:Get("welcomeShown") == false)
 assert(#ns.Database:GetHistory() == 100)
 
 ns.Database:Set("historyLimit", 5)
@@ -44,17 +43,15 @@ BetterLootRollsDB = {
         scale = 1,
         width = 460,
         height = 360,
+        welcomeShown = true,
     },
     history = {},
 }
 ns.Database:Initialize()
-assert(BetterLootRollsDB.schemaVersion == 3)
+assert(BetterLootRollsDB.schemaVersion == 4)
 assert(ns.Database:Get("width") == 300)
 assert(ns.Database:Get("height") == 240)
 assert(ns.Database:Get("opacity") == 1)
-assert(ns.Database:Get("welcomeShown") == false)
-
-ns.Database:Set("welcomeShown", true)
-assert(ns.Database:Get("welcomeShown") == true)
+assert(BetterLootRollsDB.settings.welcomeShown == nil)
 
 print("test_database.lua: ok")

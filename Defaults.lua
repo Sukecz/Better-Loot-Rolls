@@ -10,11 +10,10 @@ ns.Constants = {
 }
 
 ns.Defaults = {
-    schemaVersion = 3,
+    schemaVersion = 4,
     settings = {
         historyLimit = 20,
         autoShow = true,
-        welcomeShown = false,
         scale = 1,
         opacity = 1,
         width = 300,

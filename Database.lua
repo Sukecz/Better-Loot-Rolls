@@ -60,6 +60,9 @@ local function Migrate(data)
             data.settings.height = ns.Defaults.settings.height
         end
     end
+    if (not schemaVersion or schemaVersion < 4) and type(data.settings) == "table" then
+        data.settings.welcomeShown = nil
+    end
 end
 
 function Database:Initialize()
@@ -100,7 +103,6 @@ function Database:Validate()
         defaults.height
     )
     settings.autoShow = settings.autoShow ~= false
-    settings.welcomeShown = settings.welcomeShown == true
 
     if type(settings.position) ~= "table" then
         settings.position = CopyTable(defaults.position)
