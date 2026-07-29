@@ -12,6 +12,10 @@ All notable changes to Better Loot Rolls will be documented in this file.
   three-digit roll columns for narrow layouts.
 - Removed nested item-card borders and replaced the standard Blizzard scrollbar
   with a minimal left-side scroll indicator.
+- Corrected the left scrollbar direction and enlarged its thumb and clickable
+  area for easier dragging.
+- Loot entries now start collapsed and can be expanded individually to show
+  player choices and roll details.
 - Added configurable window opacity with a live preview in the options panel.
 
 ## [0.1.0-alpha.2] - 2026-07-28

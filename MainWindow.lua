@@ -2,6 +2,7 @@ local _, ns = ...
 
 local MainWindow = {
     cards = {},
+    expandedRecords = {},
 }
 ns.MainWindow = MainWindow
 
@@ -128,9 +129,15 @@ function MainWindow:CreateCard()
     card.separator:SetHeight(1)
     card.separator:SetColorTexture(0.18, 0.23, 0.3, 0.5)
 
+    card.expandIndicator = card:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    card.expandIndicator:SetPoint("TOPLEFT", 4, -9)
+    card.expandIndicator:SetWidth(9)
+    card.expandIndicator:SetJustifyH("CENTER")
+    card.expandIndicator:SetTextColor(0.65, 0.72, 0.82)
+
     card.icon = card:CreateTexture(nil, "ARTWORK")
     card.icon:SetSize(22, 22)
-    card.icon:SetPoint("TOPLEFT", 4, -4)
+    card.icon:SetPoint("TOPLEFT", 16, -4)
 
     card.itemName = card:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
     card.itemName:SetPoint("LEFT", card.icon, "RIGHT", 4, 0)
@@ -157,10 +164,23 @@ function MainWindow:CreateCard()
     card:SetScript("OnClick", function(frame)
         if frame.itemLink and IsModifiedClick("CHATLINK") then
             ChatEdit_InsertLink(frame.itemLink)
+            return
+        end
+
+        if frame.recordKey then
+            self.expandedRecords[frame.recordKey] = not self.expandedRecords[frame.recordKey]
+            self:Refresh()
         end
     end)
 
     return card
+end
+
+function MainWindow:GetRecordKey(record)
+    if record.fingerprint then
+        return "completed:" .. record.fingerprint
+    end
+    return "active:" .. tostring(record.rollID or record.itemLink or record)
 end
 
 function MainWindow:RenderPlayerRow(row, player, rowIndex, cardWidth)
@@ -204,19 +224,27 @@ end
 
 function MainWindow:RenderCard(card, record, topOffset, cardWidth)
     local playerCount = math.max(1, #record.players)
-    local cardHeight = 33 + (playerCount * 16)
+    local recordKey = self:GetRecordKey(record)
+    local isExpanded = self.expandedRecords[recordKey] == true
+    local cardHeight = isExpanded and (33 + (playerCount * 16)) or 30
 
     card:ClearAllPoints()
     card:SetPoint("TOPLEFT", 0, -topOffset)
     card:SetSize(cardWidth, cardHeight)
+    card.recordKey = recordKey
     card.itemLink = record.itemLink
+    card.expandIndicator:SetText(isExpanded and "-" or "+")
     card.icon:SetTexture(ns.ApiCompat:GetItemTexture(record.itemLink))
     card.itemName:SetText(record.itemLink or ns.L.UNKNOWN)
-    card.itemName:SetWidth(math.max(52, cardWidth - 105))
+    card.itemName:SetWidth(math.max(52, cardWidth - 117))
     card.status:SetText(record.isDone and ns.L.COMPLETE or ns.L.ACTIVE)
     card.status:SetTextColor(record.isDone and 0.65 or 0.3, record.isDone and 0.65 or 1, 0.3)
 
-    if #record.players == 0 then
+    if not isExpanded then
+        for playerIndex = 1, #card.playerRows do
+            card.playerRows[playerIndex]:Hide()
+        end
+    elseif #record.players == 0 then
         local row = card.playerRows[1] or self:CreatePlayerRow(card)
         card.playerRows[1] = row
         self:RenderPlayerRow(row, {
@@ -231,8 +259,10 @@ function MainWindow:RenderCard(card, record, topOffset, cardWidth)
         end
     end
 
-    for playerIndex = playerCount + 1, #card.playerRows do
-        card.playerRows[playerIndex]:Hide()
+    if isExpanded then
+        for playerIndex = playerCount + 1, #card.playerRows do
+            card.playerRows[playerIndex]:Hide()
+        end
     end
 
     card:Show()
@@ -245,17 +275,24 @@ function MainWindow:Refresh()
     end
 
     local records = ns.RollTracker:GetDisplayRecords()
-    local cardWidth = math.max(186, self.frame:GetWidth() - 16)
+    local cardWidth = math.max(186, self.frame:GetWidth() - 22)
     local offset = 0
+    local visibleRecordKeys = {}
 
     for index, record in ipairs(records) do
         local card = self.cards[index] or self:CreateCard()
         self.cards[index] = card
+        visibleRecordKeys[self:GetRecordKey(record)] = true
         offset = offset + self:RenderCard(card, record, offset, cardWidth) + 1
     end
 
     for index = #records + 1, #self.cards do
         self.cards[index]:Hide()
+    end
+    for recordKey in pairs(self.expandedRecords) do
+        if not visibleRecordKeys[recordKey] then
+            self.expandedRecords[recordKey] = nil
+        end
     end
 
     self.emptyText:SetShown(#records == 0)
@@ -276,7 +313,8 @@ function MainWindow:UpdateScrollBar()
     self.maxScroll = maxScroll
 
     self.scrollBar:SetMinMaxValues(0, math.max(1, maxScroll))
-    self.scrollBar:SetValue(maxScroll - currentScroll)
+    self.scrollFrame:SetVerticalScroll(currentScroll)
+    self.scrollBar:SetValue(currentScroll)
     self.scrollBar:SetShown(maxScroll > 0)
     self.scrollTrack:SetShown(maxScroll > 0)
 end
@@ -387,7 +425,7 @@ function MainWindow:Initialize()
 
     local scrollFrame = CreateFrame("ScrollFrame", "BetterLootRollsScrollFrame", frame)
     self.scrollFrame = scrollFrame
-    scrollFrame:SetPoint("TOPLEFT", 11, -25)
+    scrollFrame:SetPoint("TOPLEFT", 17, -25)
     scrollFrame:SetPoint("BOTTOMRIGHT", -5, 7)
     scrollFrame:EnableMouseWheel(true)
 
@@ -399,30 +437,30 @@ function MainWindow:Initialize()
     local scrollBar = CreateFrame("Slider", nil, frame)
     self.scrollBar = scrollBar
     scrollBar:SetOrientation("VERTICAL")
-    scrollBar:SetWidth(4)
-    scrollBar:SetPoint("TOPLEFT", 4, -28)
-    scrollBar:SetPoint("BOTTOMLEFT", 4, 9)
+    scrollBar:SetWidth(10)
+    scrollBar:SetPoint("TOPLEFT", 3, -28)
+    scrollBar:SetPoint("BOTTOMLEFT", 3, 9)
     scrollBar:SetValueStep(1)
     scrollBar:SetThumbTexture("Interface\\Buttons\\WHITE8X8")
     local thumb = scrollBar:GetThumbTexture()
-    thumb:SetSize(4, 24)
+    thumb:SetSize(10, 32)
     thumb:SetColorTexture(0.36, 0.57, 0.82, 0.9)
 
     local scrollTrack = frame:CreateTexture(nil, "BACKGROUND")
     self.scrollTrack = scrollTrack
-    scrollTrack:SetWidth(2)
+    scrollTrack:SetWidth(3)
     scrollTrack:SetPoint("TOP", scrollBar, "TOP")
     scrollTrack:SetPoint("BOTTOM", scrollBar, "BOTTOM")
     scrollTrack:SetColorTexture(0.18, 0.22, 0.28, 0.5)
 
     scrollBar:SetScript("OnValueChanged", function(_, value)
-        scrollFrame:SetVerticalScroll(math.max(0, (self.maxScroll or 0) - value))
+        scrollFrame:SetVerticalScroll(math.max(0, math.min(self.maxScroll or 0, value)))
     end)
     scrollFrame:SetScript("OnMouseWheel", function(_, delta)
         local maxScroll = self.maxScroll or 0
         local currentScroll = scrollFrame:GetVerticalScroll() or 0
         local targetScroll = math.max(0, math.min(maxScroll, currentScroll - (delta * 32)))
-        scrollBar:SetValue(maxScroll - targetScroll)
+        scrollBar:SetValue(targetScroll)
     end)
 
     local emptyText = frame:CreateFontString(nil, "OVERLAY", "GameFontDisable")
