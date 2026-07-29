@@ -9,8 +9,22 @@ local function Print(message)
     print("|cff33ff99Better Loot Rolls:|r " .. tostring(message))
 end
 
+local function PrintWelcome(message)
+    print("|cff33ff99Better Loot Rolls|r " .. tostring(message))
+end
+
 function Core:Refresh()
     ns.RollTracker:Refresh()
+end
+
+function Core:ShowWelcomeIfNeeded()
+    if ns.Database:Get("welcomeShown") then
+        return false
+    end
+
+    PrintWelcome(ns.L.WELCOME_MESSAGE)
+    ns.Database:Set("welcomeShown", true)
+    return true
 end
 
 function Core:Show()
@@ -73,6 +87,7 @@ function Core:OnEvent(event, ...)
 
     if event == "PLAYER_LOGIN" then
         self:Refresh()
+        self:ShowWelcomeIfNeeded()
     elseif event == "LOOT_HISTORY_AUTO_SHOW" then
         self:Refresh()
         if ns.Database:Get("autoShow") then

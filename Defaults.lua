@@ -14,6 +14,7 @@ ns.Defaults = {
     settings = {
         historyLimit = 20,
         autoShow = true,
+        welcomeShown = false,
         scale = 1,
         opacity = 1,
         width = 300,

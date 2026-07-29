@@ -14,6 +14,7 @@ ns.L = {
     PASS = "Pass",
     UNKNOWN = "Unknown",
     NO_ROLLS = "No recent group loot rolls.",
+    WELCOME_MESSAGE = "is ready. Type |cffffffff/blr options|r to customize.",
     OPTIONS = "Options",
     OPTIONS_DESCRIPTION = "Recent rolls and window appearance",
     ROLL_HISTORY = "Roll history",

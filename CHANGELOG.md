@@ -22,6 +22,7 @@ All notable changes to Better Loot Rolls will be documented in this file.
 - Added configurable window opacity with a live preview in the options panel.
 - Reorganized options into clear history and appearance sections with visible
   scale and opacity values.
+- Added a one-time welcome hint pointing new users to `/blr options`.
 
 ## [0.1.0-alpha.2] - 2026-07-28
 

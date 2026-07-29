@@ -100,6 +100,7 @@ function Database:Validate()
         defaults.height
     )
     settings.autoShow = settings.autoShow ~= false
+    settings.welcomeShown = settings.welcomeShown == true
 
     if type(settings.position) ~= "table" then
         settings.position = CopyTable(defaults.position)

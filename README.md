@@ -36,6 +36,7 @@ World of Warcraft/_classic_/Interface/AddOns/BetterLootRolls/
 ```
 
 After logging in, use `/blr` to toggle the window.
+On the first supported login, a one-time chat hint points to `/blr options`.
 
 ## Commands
 
