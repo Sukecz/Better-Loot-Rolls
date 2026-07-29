@@ -8,14 +8,6 @@ It keeps recent group loot rolls readable without turning them into a
 long-term archive. Active rolls stay at the top, while only a configurable
 number of completed rolls are retained.
 
-<p>
-  <img
-    src="https://raw.githubusercontent.com/Sukecz/Better-Loot-Rolls/main/assets/screenshot.png"
-    alt="Better Loot Rolls in game"
-    width="360"
-  />
-</p>
-
 ## Features
 
 - Shows the item icon and full item link.
