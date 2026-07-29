@@ -69,6 +69,20 @@ function ApiCompat:GetChoice(rollType)
     return "UNKNOWN"
 end
 
+function ApiCompat:GetChoiceTexture(choice)
+    if choice == "NEED" then
+        return "Interface\\Buttons\\UI-GroupLoot-Dice-Up"
+    elseif choice == "GREED" then
+        return "Interface\\Buttons\\UI-GroupLoot-Coin-Up"
+    elseif choice == "DISENCHANT" then
+        return "Interface\\Buttons\\UI-GroupLoot-DE-Up"
+    elseif choice == "PASS" then
+        return "Interface\\Buttons\\UI-GroupLoot-Pass-Up"
+    end
+
+    return nil
+end
+
 function ApiCompat:GetItemTexture(itemLink)
     if not itemLink then
         return "Interface\\Icons\\INV_Misc_QuestionMark"

@@ -148,6 +148,10 @@ function MainWindow:CreateCard()
     card.status:SetPoint("TOPRIGHT", -4, -7)
     card.status:SetJustifyH("RIGHT")
 
+    card.ownChoiceIcon = card:CreateTexture(nil, "ARTWORK")
+    card.ownChoiceIcon:SetSize(18, 18)
+    card.ownChoiceIcon:SetPoint("TOPRIGHT", -3, -6)
+
     card.playerRows = {}
 
     card:SetScript("OnEnter", function(frame)
@@ -250,6 +254,16 @@ function MainWindow:GetRecordSummary(record)
     return ns.L.COMPLETE, 0.65, 0.65, 0.65
 end
 
+function MainWindow:GetOwnChoice(record)
+    for _, player in ipairs(record.players) do
+        if player.isMe then
+            return player.choice
+        end
+    end
+
+    return nil
+end
+
 function MainWindow:RenderPlayerRow(row, player, rowIndex, cardWidth)
     local rowWidth = cardWidth - 8
     local choiceWidth = 48
@@ -303,8 +317,17 @@ function MainWindow:RenderCard(card, record, topOffset, cardWidth)
     card.expandIndicator:SetText(isExpanded and "-" or "+")
     card.icon:SetTexture(ns.ApiCompat:GetItemTexture(record.itemLink))
     card.itemName:SetText(record.itemLink or ns.L.UNKNOWN)
-    card.itemName:SetWidth(math.max(48, cardWidth - 135))
+    local ownChoiceTexture = ns.ApiCompat:GetChoiceTexture(self:GetOwnChoice(record))
+    card.ownChoiceIcon:SetTexture(ownChoiceTexture)
+    card.ownChoiceIcon:SetShown(ownChoiceTexture ~= nil)
+    card.itemName:SetWidth(math.max(48, cardWidth - (ownChoiceTexture and 153 or 135)))
     local statusText, statusRed, statusGreen, statusBlue = self:GetRecordSummary(record)
+    card.status:ClearAllPoints()
+    if ownChoiceTexture then
+        card.status:SetPoint("RIGHT", card.ownChoiceIcon, "LEFT", -3, 0)
+    else
+        card.status:SetPoint("TOPRIGHT", -4, -7)
+    end
     card.status:SetText(statusText)
     card.status:SetTextColor(statusRed, statusGreen, statusBlue)
 
@@ -494,8 +517,8 @@ function MainWindow:Initialize()
 
     local scrollFrame = CreateFrame("ScrollFrame", "BetterLootRollsScrollFrame", frame)
     self.scrollFrame = scrollFrame
-    scrollFrame:SetPoint("TOPLEFT", 17, -25)
-    scrollFrame:SetPoint("BOTTOMRIGHT", -5, 7)
+    scrollFrame:SetPoint("TOPLEFT", 5, -25)
+    scrollFrame:SetPoint("BOTTOMRIGHT", -17, 7)
     scrollFrame:EnableMouseWheel(true)
 
     local scrollChild = CreateFrame("Frame", nil, scrollFrame)
@@ -507,8 +530,8 @@ function MainWindow:Initialize()
     self.scrollBar = scrollBar
     scrollBar:SetOrientation("VERTICAL")
     scrollBar:SetWidth(10)
-    scrollBar:SetPoint("TOPLEFT", 3, -28)
-    scrollBar:SetPoint("BOTTOMLEFT", 3, 9)
+    scrollBar:SetPoint("TOPRIGHT", -3, -28)
+    scrollBar:SetPoint("BOTTOMRIGHT", -3, 9)
     scrollBar:SetValueStep(1)
     scrollBar:SetThumbTexture("Interface\\Buttons\\WHITE8X8")
     local thumb = scrollBar:GetThumbTexture()

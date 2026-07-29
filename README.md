@@ -13,6 +13,7 @@ For each recent item it shows:
 
 - the item icon and link with roll progress or the final result in a collapsed
   summary;
+- the player's own Need, Greed, Disenchant, or Pass icon in every item header;
 - expandable details for every participating player with class color;
 - Need, Greed, Disenchant, Pass, or waiting state;
 - each completed roll value;

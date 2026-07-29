@@ -6,6 +6,11 @@ local ns = {
         UNKNOWN = "Unknown",
         WAITING = "Waiting",
     },
+    ApiCompat = {
+        GetChoiceTexture = function(_, choice)
+            return choice and ("texture:" .. choice) or nil
+        end,
+    },
 }
 
 RAID_CLASS_COLORS = {
@@ -25,6 +30,7 @@ local active = {
 }
 local summary = ns.MainWindow:GetRecordSummary(active)
 assert(summary == "1/2")
+assert(ns.MainWindow:GetOwnChoice(active) == nil)
 
 ns.MainWindow.expandedRecords[ns.MainWindow:GetRecordKey(active)] = true
 
@@ -40,6 +46,7 @@ local completed = {
             choice = "NEED",
             roll = 88,
             isWinner = true,
+            isMe = true,
         },
         { name = "Rogue", choice = "GREED", roll = 42 },
     },
@@ -47,6 +54,7 @@ local completed = {
 ns.MainWindow:PreserveExpandedState({ completed })
 assert(ns.MainWindow.expandedRecords[ns.MainWindow:GetRecordKey(completed)] == true)
 assert(ns.MainWindow:GetRecordSummary(completed) == "Mage 88")
+assert(ns.MainWindow:GetOwnChoice(completed) == "NEED")
 
 local allPassed = {
     isDone = true,

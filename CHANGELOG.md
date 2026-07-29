@@ -11,13 +11,15 @@ All notable changes to Better Loot Rolls will be documented in this file.
 - Reduced the minimum window width and tightened the player, choice, and
   three-digit roll columns for narrow layouts.
 - Removed nested item-card borders and replaced the standard Blizzard scrollbar
-  with a minimal left-side scroll indicator.
-- Corrected the left scrollbar direction and enlarged its thumb and clickable
-  area for easier dragging.
+  with a minimal right-side scroll indicator.
+- Corrected the scrollbar direction and enlarged its thumb and clickable area
+  for easier dragging.
 - Loot entries now start collapsed and can be expanded individually to show
   player choices and roll details.
 - Collapsed entries now summarize roll progress, the winning player and roll,
   or an all-passed result.
+- Item headers now show the player's own Need, Greed, Disenchant, or Pass icon
+  even while the entry is collapsed.
 - Expanded entries remain open when an active roll becomes completed.
 - Added configurable window opacity with a live preview in the options panel.
 - Reorganized options into clear history and appearance sections with visible
