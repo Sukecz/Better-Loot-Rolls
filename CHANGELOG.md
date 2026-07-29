@@ -7,7 +7,8 @@ All notable changes to Better Loot Rolls will be documented in this file.
 ### Changed
 
 - Reworked the main roll window into a compact modern panel with a minimal
-  icon-only header and denser item and player rows.
+  header and denser item and player rows.
+- Added a subtle Better Loot Rolls label to the existing compact title bar.
 - Reduced the minimum window width and tightened the player, choice, and
   three-digit roll columns for narrow layouts.
 - Removed nested item-card borders and replaced the standard Blizzard scrollbar
@@ -24,6 +25,7 @@ All notable changes to Better Loot Rolls will be documented in this file.
 - Added configurable window opacity with a live preview in the options panel.
 - Reorganized options into clear history and appearance sections with visible
   scale and opacity values.
+- Made the options window movable by dragging its header.
 - Added a concise login message pointing users to `/blr options`.
 
 ## [0.1.0-alpha.2] - 2026-07-28
