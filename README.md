@@ -11,7 +11,8 @@ the focus on loot information.
 
 For each recent item it shows:
 
-- the item icon, link, and current status in a collapsed summary;
+- the item icon and link with roll progress or the final result in a collapsed
+  summary;
 - expandable details for every participating player with class color;
 - Need, Greed, Disenchant, Pass, or waiting state;
 - each completed roll value;
@@ -48,7 +49,8 @@ After logging in, use `/blr` to toggle the window.
 The window can be moved by dragging its title area and resized from its
 bottom-right corner. Click an item row to expand or collapse its roll details;
 Shift-click still inserts the item link into chat. Position, size, scale,
-history limit, and recent rolls are stored account-wide.
+history limit, and recent rolls are stored account-wide. An expanded active
+roll stays open when its winner is announced.
 
 ## Current verification status
 

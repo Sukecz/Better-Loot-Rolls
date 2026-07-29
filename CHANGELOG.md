@@ -16,7 +16,12 @@ All notable changes to Better Loot Rolls will be documented in this file.
   area for easier dragging.
 - Loot entries now start collapsed and can be expanded individually to show
   player choices and roll details.
+- Collapsed entries now summarize roll progress, the winning player and roll,
+  or an all-passed result.
+- Expanded entries remain open when an active roll becomes completed.
 - Added configurable window opacity with a live preview in the options panel.
+- Reorganized options into clear history and appearance sections with visible
+  scale and opacity values.
 
 ## [0.1.0-alpha.2] - 2026-07-28
 

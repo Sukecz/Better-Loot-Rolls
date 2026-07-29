@@ -20,6 +20,31 @@ local function CreateBackdropFrame(name, parent)
     return frame
 end
 
+local function CreateSection(parent, titleText)
+    local section = CreateBackdropFrame(nil, parent)
+    if section.SetBackdrop then
+        section:SetBackdrop({
+            bgFile = "Interface\\Buttons\\WHITE8X8",
+            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            tile = false,
+            edgeSize = 1,
+            insets = { left = 1, right = 1, top = 1, bottom = 1 },
+        })
+        section:SetBackdropColor(0.045, 0.052, 0.065, 0.94)
+        section:SetBackdropBorderColor(0.16, 0.2, 0.26, 1)
+    end
+
+    local title = section:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    title:SetPoint("TOPLEFT", 12, -10)
+    title:SetText(titleText)
+    section.title = title
+    return section
+end
+
+local function FormatPercent(value)
+    return string.format("%d%%", math.floor((value * 100) + 0.5))
+end
+
 function Options:Apply()
     ns.Database:Set("historyLimit", self.historyEdit:GetNumber())
     ns.Database:Set("autoShow", self.autoShow:GetChecked())
@@ -35,6 +60,8 @@ function Options:Refresh()
     self.autoShow:SetChecked(ns.Database:Get("autoShow"))
     self.scaleSlider:SetValue(ns.Database:Get("scale"))
     self.opacitySlider:SetValue(ns.Database:Get("opacity"))
+    self.scaleValue:SetText(FormatPercent(ns.Database:Get("scale")))
+    self.opacityValue:SetText(FormatPercent(ns.Database:Get("opacity")))
 end
 
 function Options:Initialize()
@@ -44,27 +71,47 @@ function Options:Initialize()
 
     local frame = CreateBackdropFrame("BetterLootRollsOptionsFrame", UIParent)
     self.frame = frame
-    frame:SetSize(360, 305)
+    frame:SetSize(400, 370)
     frame:SetPoint("CENTER")
     frame:SetFrameStrata("FULLSCREEN_DIALOG")
     frame:SetClampedToScreen(true)
     frame:Hide()
 
     local title = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-    title:SetPoint("TOPLEFT", 15, -15)
-    title:SetText(ns.L.TITLE .. " - " .. ns.L.OPTIONS)
+    title:SetPoint("TOPLEFT", 18, -15)
+    title:SetText(ns.L.TITLE)
+
+    local description = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    description:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -3)
+    description:SetText(ns.L.OPTIONS_DESCRIPTION)
+    description:SetTextColor(0.62, 0.67, 0.74)
 
     local closeButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
     closeButton:SetPoint("TOPRIGHT", 2, 2)
 
-    local historyLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-    historyLabel:SetPoint("TOPLEFT", 18, -58)
+    local historySection = CreateSection(frame, ns.L.ROLL_HISTORY)
+    historySection:SetPoint("TOPLEFT", 14, -58)
+    historySection:SetPoint("TOPRIGHT", -14, -58)
+    historySection:SetHeight(102)
+
+    local autoShow = CreateFrame("CheckButton", nil, historySection, "UICheckButtonTemplate")
+    self.autoShow = autoShow
+    autoShow:SetPoint("TOPLEFT", 7, -27)
+    autoShow.text:SetText(ns.L.AUTO_SHOW)
+
+    local historyLabel = historySection:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    historyLabel:SetPoint("TOPLEFT", 12, -62)
     historyLabel:SetText(ns.L.HISTORY_LIMIT)
 
-    local historyEdit = CreateFrame("EditBox", nil, frame, "InputBoxTemplate")
+    local historyHint = historySection:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    historyHint:SetPoint("TOPLEFT", historyLabel, "BOTTOMLEFT", 0, -2)
+    historyHint:SetText(ns.L.HISTORY_RANGE)
+    historyHint:SetTextColor(0.52, 0.57, 0.64)
+
+    local historyEdit = CreateFrame("EditBox", nil, historySection, "InputBoxTemplate")
     self.historyEdit = historyEdit
     historyEdit:SetSize(55, 24)
-    historyEdit:SetPoint("LEFT", historyLabel, "RIGHT", 14, 0)
+    historyEdit:SetPoint("TOPRIGHT", -13, -57)
     historyEdit:SetAutoFocus(false)
     historyEdit:SetNumeric(true)
     historyEdit:SetMaxLetters(3)
@@ -73,34 +120,47 @@ function Options:Initialize()
         historyEdit:ClearFocus()
     end)
 
-    local autoShow = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
-    self.autoShow = autoShow
-    autoShow:SetPoint("TOPLEFT", 14, -88)
-    autoShow.text:SetText(ns.L.AUTO_SHOW)
+    local appearanceSection = CreateSection(frame, ns.L.APPEARANCE)
+    appearanceSection:SetPoint("TOPLEFT", 14, -170)
+    appearanceSection:SetPoint("TOPRIGHT", -14, -170)
+    appearanceSection:SetHeight(146)
 
-    local scaleLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-    scaleLabel:SetPoint("TOPLEFT", 18, -132)
+    local scaleLabel = appearanceSection:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    scaleLabel:SetPoint("TOPLEFT", 12, -34)
     scaleLabel:SetText(ns.L.WINDOW_SCALE)
 
-    local scaleSlider = CreateFrame("Slider", nil, frame, "OptionsSliderTemplate")
+    local scaleValue = appearanceSection:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    self.scaleValue = scaleValue
+    scaleValue:SetPoint("TOPRIGHT", -12, -34)
+    scaleValue:SetJustifyH("RIGHT")
+
+    local scaleSlider = CreateFrame("Slider", nil, appearanceSection, "OptionsSliderTemplate")
     self.scaleSlider = scaleSlider
-    scaleSlider:SetPoint("TOPLEFT", scaleLabel, "BOTTOMLEFT", 4, -14)
-    scaleSlider:SetWidth(190)
+    scaleSlider:SetPoint("TOPLEFT", 20, -57)
+    scaleSlider:SetWidth(320)
     scaleSlider:SetMinMaxValues(0.75, 1.5)
     scaleSlider:SetValueStep(0.05)
     scaleSlider:SetObeyStepOnDrag(true)
     scaleSlider.Low:SetText("75%")
     scaleSlider.High:SetText("150%")
     scaleSlider.Text:SetText("")
+    scaleSlider:SetScript("OnValueChanged", function(_, value)
+        scaleValue:SetText(FormatPercent(value))
+    end)
 
-    local opacityLabel = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-    opacityLabel:SetPoint("TOPLEFT", 18, -198)
+    local opacityLabel = appearanceSection:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    opacityLabel:SetPoint("TOPLEFT", 12, -94)
     opacityLabel:SetText(ns.L.WINDOW_OPACITY)
 
-    local opacitySlider = CreateFrame("Slider", nil, frame, "OptionsSliderTemplate")
+    local opacityValue = appearanceSection:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    self.opacityValue = opacityValue
+    opacityValue:SetPoint("TOPRIGHT", -12, -94)
+    opacityValue:SetJustifyH("RIGHT")
+
+    local opacitySlider = CreateFrame("Slider", nil, appearanceSection, "OptionsSliderTemplate")
     self.opacitySlider = opacitySlider
-    opacitySlider:SetPoint("TOPLEFT", opacityLabel, "BOTTOMLEFT", 4, -14)
-    opacitySlider:SetWidth(190)
+    opacitySlider:SetPoint("TOPLEFT", 20, -117)
+    opacitySlider:SetWidth(320)
     opacitySlider:SetMinMaxValues(0.2, 1)
     opacitySlider:SetValueStep(0.05)
     opacitySlider:SetObeyStepOnDrag(true)
@@ -108,13 +168,14 @@ function Options:Initialize()
     opacitySlider.High:SetText("100%")
     opacitySlider.Text:SetText("")
     opacitySlider:SetScript("OnValueChanged", function(_, value)
+        opacityValue:SetText(FormatPercent(value))
         if ns.MainWindow.frame then
             ns.MainWindow.frame:SetAlpha(value)
         end
     end)
 
     local applyButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
-    applyButton:SetSize(80, 24)
+    applyButton:SetSize(90, 24)
     applyButton:SetPoint("BOTTOMRIGHT", -14, 14)
     applyButton:SetText(ns.L.APPLY)
     applyButton:SetScript("OnClick", function()

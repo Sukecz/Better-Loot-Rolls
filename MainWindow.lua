@@ -180,7 +180,74 @@ function MainWindow:GetRecordKey(record)
     if record.fingerprint then
         return "completed:" .. record.fingerprint
     end
-    return "active:" .. tostring(record.rollID or record.itemLink or record)
+    return "active:" .. self:GetLifecycleKey(record)
+end
+
+function MainWindow:GetLifecycleKey(record)
+    return table.concat({
+        tostring(record.rollID or "unknown"),
+        tostring(record.itemLink or "unknown"),
+    }, ":")
+end
+
+function MainWindow:PreserveExpandedState(records)
+    local activeLifecycleKeys = {}
+    for _, record in ipairs(records) do
+        if not record.fingerprint then
+            activeLifecycleKeys[self:GetLifecycleKey(record)] = true
+        end
+    end
+
+    for _, record in ipairs(records) do
+        if record.fingerprint then
+            local lifecycleKey = self:GetLifecycleKey(record)
+            local activeKey = "active:" .. lifecycleKey
+            if not activeLifecycleKeys[lifecycleKey] and self.expandedRecords[activeKey] then
+                self.expandedRecords[self:GetRecordKey(record)] = true
+                self.expandedRecords[activeKey] = nil
+            end
+        end
+    end
+end
+
+function MainWindow:GetRecordSummary(record)
+    if not record.isDone then
+        local decided = 0
+        for _, player in ipairs(record.players) do
+            if player.choice and player.choice ~= "WAITING" then
+                decided = decided + 1
+            end
+        end
+
+        if #record.players == 0 then
+            return ns.L.WAITING, 0.3, 1, 0.3
+        end
+        return string.format(ns.L.ROLL_PROGRESS, decided, #record.players), 0.3, 1, 0.3
+    end
+
+    for _, player in ipairs(record.players) do
+        if player.isWinner then
+            local summary = GetCompactPlayerName(player.name)
+            if player.roll then
+                summary = summary .. " " .. tostring(player.roll)
+            end
+            local red, green, blue = GetClassColor(player.class)
+            return summary, red, green, blue
+        end
+    end
+
+    local allPassed = #record.players > 0
+    for _, player in ipairs(record.players) do
+        if player.choice ~= "PASS" then
+            allPassed = false
+            break
+        end
+    end
+    if allPassed or #record.players == 0 then
+        return ns.L.ALL_PASSED, 0.55, 0.55, 0.55
+    end
+
+    return ns.L.COMPLETE, 0.65, 0.65, 0.65
 end
 
 function MainWindow:RenderPlayerRow(row, player, rowIndex, cardWidth)
@@ -236,9 +303,10 @@ function MainWindow:RenderCard(card, record, topOffset, cardWidth)
     card.expandIndicator:SetText(isExpanded and "-" or "+")
     card.icon:SetTexture(ns.ApiCompat:GetItemTexture(record.itemLink))
     card.itemName:SetText(record.itemLink or ns.L.UNKNOWN)
-    card.itemName:SetWidth(math.max(52, cardWidth - 117))
-    card.status:SetText(record.isDone and ns.L.COMPLETE or ns.L.ACTIVE)
-    card.status:SetTextColor(record.isDone and 0.65 or 0.3, record.isDone and 0.65 or 1, 0.3)
+    card.itemName:SetWidth(math.max(48, cardWidth - 135))
+    local statusText, statusRed, statusGreen, statusBlue = self:GetRecordSummary(record)
+    card.status:SetText(statusText)
+    card.status:SetTextColor(statusRed, statusGreen, statusBlue)
 
     if not isExpanded then
         for playerIndex = 1, #card.playerRows do
@@ -275,6 +343,7 @@ function MainWindow:Refresh()
     end
 
     local records = ns.RollTracker:GetDisplayRecords()
+    self:PreserveExpandedState(records)
     local cardWidth = math.max(186, self.frame:GetWidth() - 22)
     local offset = 0
     local visibleRecordKeys = {}
