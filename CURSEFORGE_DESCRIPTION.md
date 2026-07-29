@@ -8,6 +8,14 @@ It keeps recent group loot rolls readable without turning them into a
 long-term archive. Active rolls stay at the top, while only a configurable
 number of completed rolls are retained.
 
+<p>
+  <img
+    src="https://raw.githubusercontent.com/Sukecz/Better-Loot-Rolls/main/assets/screenshot.png"
+    alt="Better Loot Rolls in game"
+    width="360"
+  />
+</p>
+
 ## Features
 
 - Shows the item icon and full item link.
@@ -37,14 +45,13 @@ Master Loot actions.
 
 ## Client coverage
 
-This alpha targets:
+Better Loot Rolls supports:
 
 - World of Warcraft Classic Era, including Hardcore realms (`1.15.9`);
 - World of Warcraft: Burning Crusade Classic Anniversary (`2.5.6`).
 
-This is an early alpha intended for practical in-game validation. Please report
-the exact client build, locale, reproduction steps, and `/blr api` output with
-any problem.
+Please report the exact client build, locale, reproduction steps, and `/blr
+api` output with any problem.
 
 ## Installation
 

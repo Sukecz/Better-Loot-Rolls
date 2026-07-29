@@ -6,8 +6,10 @@ presents the same server-provided roll information as Blizzard's `/loot`
 window in a movable, fully resizable view.
 
 The included Better Loot Rolls artwork is used in the WoW addon list and in the
-addon metadata. The in-game roll window uses a compact icon-only header to keep
-the focus on loot information.
+addon metadata. The in-game roll window uses a compact header to keep the focus
+on loot information.
+
+![Better Loot Rolls in game](assets/screenshot.png)
 
 For each recent item it shows:
 

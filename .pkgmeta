@@ -13,4 +13,5 @@ ignore:
   - CURSEFORGE_DESCRIPTION.md
   - tests
   - tools
+  - assets/screenshot.png
   - "*.code-workspace"
