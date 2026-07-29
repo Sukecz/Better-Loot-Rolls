@@ -4,6 +4,8 @@ All notable changes to Better Loot Rolls will be documented in this file.
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-07-29
+
 ### Changed
 
 - Reduced the minimum window width to 180 pixels and made item headers use
