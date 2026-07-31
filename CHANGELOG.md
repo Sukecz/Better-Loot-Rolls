@@ -4,6 +4,13 @@ All notable changes to Better Loot Rolls will be documented in this file.
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-07-31
+
+### Added
+
+- Added a small one-click clear-history icon beside the settings gear in the
+  main roll window. It clears completed history without a confirmation prompt.
+
 ## [0.1.1] - 2026-07-29
 
 ### Changed

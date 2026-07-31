@@ -50,13 +50,13 @@ while IFS= read -r toc_file; do
 done <<< "$vanilla_files"
 
 grep -qx '## Interface: 11509' BetterLootRolls.toc
-grep -qx '## Version: 0.1.1' BetterLootRolls.toc
+grep -qx '## Version: 0.1.2' BetterLootRolls.toc
 grep -qx '## X-Curse-Project-ID: 1629593' BetterLootRolls.toc
 grep -qx '## X-Flavor: Vanilla' BetterLootRolls.toc
 grep -qx '## AllowLoadGameType: vanilla' BetterLootRolls.toc
 grep -Fqx '## IconTexture: Interface\AddOns\BetterLootRolls\assets\logo' BetterLootRolls.toc
 grep -qx '## Interface: 20506' BetterLootRolls_TBC.toc
-grep -qx '## Version: 0.1.1' BetterLootRolls_TBC.toc
+grep -qx '## Version: 0.1.2' BetterLootRolls_TBC.toc
 grep -qx '## X-Curse-Project-ID: 1629593' BetterLootRolls_TBC.toc
 grep -qx '## X-Flavor: TBC' BetterLootRolls_TBC.toc
 grep -qx '## AllowLoadGameType: tbc' BetterLootRolls_TBC.toc

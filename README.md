@@ -51,11 +51,12 @@ A concise chat message points to `/blr options` on each login.
 - `/blr api` — print a compact client/API compatibility report.
 
 The main window can be moved by dragging its subtle title bar and resized from
-its bottom-right corner. The options window can also be moved by dragging its
-header. Click an item row to expand or collapse its roll details; Shift-click
-still inserts the item link into chat. Position, size, scale, history limit,
-and recent rolls are stored account-wide. An expanded active roll stays open
-when its winner is announced.
+its bottom-right corner. Its small red X beside the settings gear immediately
+clears completed history; active rolls are left intact. The options window can
+also be moved by dragging its header. Click an item row to expand or collapse
+its roll details; Shift-click still inserts the item link into chat. Position,
+size, scale, history limit, and recent rolls are stored account-wide. An
+expanded active roll stays open when its winner is announced.
 
 ## Current verification status
 
