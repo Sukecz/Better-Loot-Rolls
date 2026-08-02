@@ -62,5 +62,7 @@ grep -qx '## X-Flavor: TBC' BetterLootRolls_TBC.toc
 grep -qx '## AllowLoadGameType: tbc' BetterLootRolls_TBC.toc
 grep -Fqx '## IconTexture: Interface\AddOns\BetterLootRolls\assets\logo' BetterLootRolls_TBC.toc
 test -f assets/logo.png
+test -f tools/windows/Deploy-WoW-Addons.cmd
+test -f tools/windows/Deploy-WoW-Addons.ps1
 
 echo "All Lua 5.1 and TOC checks passed."

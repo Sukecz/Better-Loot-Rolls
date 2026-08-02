@@ -4,6 +4,12 @@ All notable changes to Better Loot Rolls will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Replace the addon-specific Windows deployer with one shared launcher that
+  validates and updates Better Loot Rolls, Simple Scrolling Loot, and Simple
+  Arsenal Swap in a single run.
+
 ## [0.1.2] - 2026-07-31
 
 ### Added
