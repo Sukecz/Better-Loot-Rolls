@@ -223,9 +223,9 @@ finally {
     }
 }
 
-if (-not $NoPause) {
+if (-not $NoPause -and $exitCode -ne 0) {
     Write-Host ""
-    Read-Host "Press Enter to close"
+    Read-Host "Deployment failed. Press Enter to close"
 }
 
 exit $exitCode

@@ -90,4 +90,5 @@ This is the shared deployment tool for Better Loot Rolls, Simple Scrolling
 Loot, and Simple Arsenal Swap. It uses the existing `ssh minipc` connection,
 tests all three projects on MINIPC, stages and validates all three downloads,
 and then synchronizes their current runtime files into the Classic Era AddOns
-folder. It does not touch WoW SavedVariables.
+folder. It does not touch WoW SavedVariables. The window closes automatically
+after success and stays open on an error so the failure message can be read.
