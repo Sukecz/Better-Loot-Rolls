@@ -3,8 +3,9 @@ local _, ns = ...
 ns.Constants = {
     MIN_HISTORY = 5,
     MAX_HISTORY = 100,
-    MIN_WIDTH = 180,
+    MIN_WIDTH = 80,
     MAX_WIDTH = 900,
+    ICON_ONLY_WIDTH = 180,
     MIN_HEIGHT = 130,
     MAX_HEIGHT = 800,
 }

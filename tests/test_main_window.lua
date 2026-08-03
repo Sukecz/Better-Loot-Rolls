@@ -19,6 +19,14 @@ RAID_CLASS_COLORS = {
 
 assert(loadfile("MainWindow.lua"))("BetterLootRolls", ns)
 
+ns.Constants = {
+    ICON_ONLY_WIDTH = 180,
+}
+
+assert(ns.MainWindow:IsIconOnlyWidth(80) == true)
+assert(ns.MainWindow:IsIconOnlyWidth(179) == true)
+assert(ns.MainWindow:IsIconOnlyWidth(180) == false)
+
 local active = {
     rollID = 12,
     itemLink = "|Hitem:1|h[Test]|h",
