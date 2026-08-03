@@ -147,6 +147,7 @@ function MainWindow:CreateCard()
     card.status = card:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
     card.status:SetPoint("TOPRIGHT", -4, -7)
     card.status:SetJustifyH("RIGHT")
+    card.status:SetWordWrap(false)
 
     card.ownChoiceIcon = card:CreateTexture(nil, "ARTWORK")
     card.ownChoiceIcon:SetSize(18, 18)
@@ -171,7 +172,7 @@ function MainWindow:CreateCard()
             return
         end
 
-        if frame.recordKey and not frame.iconOnly then
+        if frame.recordKey then
             self.expandedRecords[frame.recordKey] = not self.expandedRecords[frame.recordKey]
             self:Refresh()
         end
@@ -268,7 +269,7 @@ function MainWindow:RenderPlayerRow(row, player, rowIndex, cardWidth)
     local rowWidth = cardWidth - 8
     local choiceWidth = 48
     local rollWidth = 24
-    local nameWidth = math.max(54, rowWidth - choiceWidth - rollWidth - 2)
+    local nameWidth = math.max(34, rowWidth - choiceWidth - rollWidth - 2)
 
     row:ClearAllPoints()
     row:SetPoint("TOPLEFT", 4, -30 - ((rowIndex - 1) * 16))
@@ -303,14 +304,14 @@ function MainWindow:RenderPlayerRow(row, player, rowIndex, cardWidth)
     row:Show()
 end
 
-function MainWindow:IsIconOnlyWidth(frameWidth)
-    return frameWidth < ns.Constants.ICON_ONLY_WIDTH
+function MainWindow:ShouldHideItemName(frameWidth)
+    return frameWidth < ns.Constants.HIDE_ITEM_NAME_WIDTH
 end
 
-function MainWindow:RenderCard(card, record, topOffset, cardWidth, iconOnly)
+function MainWindow:RenderCard(card, record, topOffset, cardWidth, hideItemName)
     local playerCount = math.max(1, #record.players)
     local recordKey = self:GetRecordKey(record)
-    local isExpanded = not iconOnly and self.expandedRecords[recordKey] == true
+    local isExpanded = self.expandedRecords[recordKey] == true
     local cardHeight = isExpanded and (33 + (playerCount * 16)) or 30
 
     card:ClearAllPoints()
@@ -318,34 +319,34 @@ function MainWindow:RenderCard(card, record, topOffset, cardWidth, iconOnly)
     card:SetSize(cardWidth, cardHeight)
     card.recordKey = recordKey
     card.itemLink = record.itemLink
-    card.iconOnly = iconOnly
     card.expandIndicator:SetText(isExpanded and "-" or "+")
-    card.expandIndicator:SetShown(not iconOnly)
     card.icon:ClearAllPoints()
-    if iconOnly then
-        card.icon:SetPoint("TOP", card, "TOP", 0, -4)
-    else
-        card.icon:SetPoint("TOPLEFT", 16, -4)
-    end
+    card.icon:SetPoint("TOPLEFT", 16, -4)
     card.icon:SetTexture(ns.ApiCompat:GetItemTexture(record.itemLink))
     local ownChoiceTexture = ns.ApiCompat:GetChoiceTexture(self:GetOwnChoice(record))
     card.ownChoiceIcon:SetTexture(ownChoiceTexture)
-    card.ownChoiceIcon:SetShown(ownChoiceTexture ~= nil and not iconOnly)
+    card.ownChoiceIcon:SetShown(ownChoiceTexture ~= nil)
     local statusText, statusRed, statusGreen, statusBlue = self:GetRecordSummary(record)
     card.status:ClearAllPoints()
-    if ownChoiceTexture then
+    if hideItemName then
+        card.status:SetPoint("LEFT", card.icon, "RIGHT", 4, 0)
+        if ownChoiceTexture then
+            card.status:SetPoint("RIGHT", card.ownChoiceIcon, "LEFT", -3, 0)
+        else
+            card.status:SetPoint("RIGHT", card, "RIGHT", -4, 0)
+        end
+    elseif ownChoiceTexture then
         card.status:SetPoint("RIGHT", card.ownChoiceIcon, "LEFT", -3, 0)
     else
         card.status:SetPoint("TOPRIGHT", -4, -7)
     end
     card.status:SetText(statusText)
     card.status:SetTextColor(statusRed, statusGreen, statusBlue)
-    card.status:SetShown(not iconOnly)
     card.itemName:ClearAllPoints()
     card.itemName:SetPoint("LEFT", card.icon, "RIGHT", 4, 0)
     card.itemName:SetPoint("RIGHT", card.status, "LEFT", -4, 0)
     card.itemName:SetText(record.itemLink or ns.L.UNKNOWN)
-    card.itemName:SetShown(not iconOnly)
+    card.itemName:SetShown(not hideItemName)
 
     if not isExpanded then
         for playerIndex = 1, #card.playerRows do
@@ -387,7 +388,7 @@ function MainWindow:Refresh()
         ns.Constants.MIN_WIDTH - 22,
         self.frame:GetWidth() - 22
     )
-    local iconOnly = self:IsIconOnlyWidth(self.frame:GetWidth())
+    local hideItemName = self:ShouldHideItemName(self.frame:GetWidth())
     local offset = 0
     local visibleRecordKeys = {}
 
@@ -395,7 +396,7 @@ function MainWindow:Refresh()
         local card = self.cards[index] or self:CreateCard()
         self.cards[index] = card
         visibleRecordKeys[self:GetRecordKey(record)] = true
-        offset = offset + self:RenderCard(card, record, offset, cardWidth, iconOnly) + 1
+        offset = offset + self:RenderCard(card, record, offset, cardWidth, hideItemName) + 1
     end
 
     for index = #records + 1, #self.cards do

@@ -6,8 +6,8 @@ All notable changes to Better Loot Rolls will be documented in this file.
 
 ### Changed
 
-- Reduced the minimum roll-window width to 80 pixels. Below 180 pixels, rows
-  show only centered item icons while keeping item tooltips available.
+- Reduced the minimum roll-window width to 140 pixels. Below 180 pixels, only
+  item names are hidden; roll results, choice icons, and player details remain.
 - Replace the addon-specific Windows deployer with one shared launcher that
   validates and updates Better Loot Rolls, Simple Scrolling Loot, and Simple
   Arsenal Swap in a single run.
