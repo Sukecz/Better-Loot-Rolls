@@ -2,7 +2,7 @@
 ## Title: Better Loot Rolls
 ## Notes: A configurable recent history of group loot rolls for WoW Classic Era and TBC Classic.
 ## Author: Better Loot Rolls Authors
-## Version: 0.1.2
+## Version: 0.1.3
 ## SavedVariables: BetterLootRollsDB
 ## X-Curse-Project-ID: 1629593
 ## X-Flavor: Vanilla

@@ -4,6 +4,8 @@ All notable changes to Better Loot Rolls will be documented in this file.
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-08-03
+
 ### Changed
 
 - Reduced the minimum roll-window width to 140 pixels. Below 180 pixels, only
