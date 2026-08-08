@@ -4,6 +4,8 @@ All notable changes to Better Loot Rolls will be documented in this file.
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-08-08
+
 ### Fixed
 
 - Keep the main roll window on the standard UI layer so inventory and other
