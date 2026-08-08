@@ -53,7 +53,9 @@ A concise chat message points to `/blr options` on each login.
 The main window can be moved by dragging its subtle title bar and resized from
 its bottom-right corner. Below 180 pixels wide, item names are hidden to make
 room while the item icon, roll result, own-choice icon, and expandable player
-details remain available. Hover still shows the item tooltip. Its small red X
+details remain available. The window uses the standard UI layer, allowing
+inventory and other regular Blizzard windows to appear above it. Hover still
+shows the item tooltip. Its small red X
 beside the settings gear immediately clears completed history; active rolls are
 left intact. The options window can also be moved by dragging its header. Click
 an item row to expand or collapse its roll details; Shift-click still inserts

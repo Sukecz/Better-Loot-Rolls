@@ -472,7 +472,7 @@ function MainWindow:Initialize()
     local frame = CreateBackdropFrame("Frame", "BetterLootRollsFrame", UIParent)
     self.frame = frame
     SetBackdrop(frame, { 0.018, 0.022, 0.029, 0.96 })
-    frame:SetFrameStrata("DIALOG")
+    frame:SetFrameStrata("MEDIUM")
     frame:SetClampedToScreen(true)
     frame:SetMovable(true)
     frame:SetResizable(true)

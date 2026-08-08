@@ -4,6 +4,11 @@ All notable changes to Better Loot Rolls will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Keep the main roll window on the standard UI layer so inventory and other
+  regular Blizzard windows can appear above it.
+
 ## [0.1.3] - 2026-08-03
 
 ### Changed

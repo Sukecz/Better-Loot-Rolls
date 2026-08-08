@@ -19,6 +19,12 @@ RAID_CLASS_COLORS = {
 
 assert(loadfile("MainWindow.lua"))("BetterLootRolls", ns)
 
+local sourceFile = assert(io.open("MainWindow.lua", "r"))
+local source = sourceFile:read("*a")
+sourceFile:close()
+assert(source:find('frame:SetFrameStrata%("MEDIUM"%)'))
+assert(not source:find('frame:SetFrameStrata%("DIALOG"%)'))
+
 ns.Constants = {
     HIDE_ITEM_NAME_WIDTH = 180,
 }
