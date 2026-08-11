@@ -4,6 +4,12 @@ All notable changes to Better Loot Rolls will be documented in this file.
 
 ## [Unreleased]
 
+## [0.1.5] - 2026-08-11
+
+### Fixed
+
+- Use a dedicated 256px TGA icon in the in-game AddOns list.
+
 ## [0.1.4] - 2026-08-08
 
 ### Fixed

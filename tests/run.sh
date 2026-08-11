@@ -50,18 +50,19 @@ while IFS= read -r toc_file; do
 done <<< "$vanilla_files"
 
 grep -qx '## Interface: 11509' BetterLootRolls.toc
-grep -qx '## Version: 0.1.4' BetterLootRolls.toc
+grep -qx '## Version: 0.1.5' BetterLootRolls.toc
 grep -qx '## X-Curse-Project-ID: 1629593' BetterLootRolls.toc
 grep -qx '## X-Flavor: Vanilla' BetterLootRolls.toc
 grep -qx '## AllowLoadGameType: vanilla' BetterLootRolls.toc
-grep -Fqx '## IconTexture: Interface\AddOns\BetterLootRolls\assets\logo' BetterLootRolls.toc
+grep -Fqx '## IconTexture: Interface\AddOns\BetterLootRolls\assets\addon-icon.tga' BetterLootRolls.toc
 grep -qx '## Interface: 20506' BetterLootRolls_TBC.toc
-grep -qx '## Version: 0.1.4' BetterLootRolls_TBC.toc
+grep -qx '## Version: 0.1.5' BetterLootRolls_TBC.toc
 grep -qx '## X-Curse-Project-ID: 1629593' BetterLootRolls_TBC.toc
 grep -qx '## X-Flavor: TBC' BetterLootRolls_TBC.toc
 grep -qx '## AllowLoadGameType: tbc' BetterLootRolls_TBC.toc
-grep -Fqx '## IconTexture: Interface\AddOns\BetterLootRolls\assets\logo' BetterLootRolls_TBC.toc
+grep -Fqx '## IconTexture: Interface\AddOns\BetterLootRolls\assets\addon-icon.tga' BetterLootRolls_TBC.toc
 test -f assets/logo.png
+file assets/addon-icon.tga | grep -Fq '256 x 256 x 32'
 test -f tools/windows/Deploy-WoW-Addons.cmd
 test -f tools/windows/Deploy-WoW-Addons.ps1
 
