@@ -3,6 +3,29 @@ local _, ns = ...
 local ApiCompat = {}
 ns.ApiCompat = ApiCompat
 
+function ApiCompat:GetPlayerKey()
+    local name, realm
+    if type(UnitFullName) == "function" then
+        name, realm = UnitFullName("player")
+    end
+    if (not name or name == "") and type(UnitName) == "function" then
+        name = UnitName("player")
+    end
+    if type(GetNormalizedRealmName) == "function" then
+        realm = GetNormalizedRealmName() or realm
+    elseif (not realm or realm == "") and type(GetRealmName) == "function" then
+        realm = GetRealmName()
+    end
+
+    if not name or name == "" then
+        return nil
+    end
+    if realm and realm ~= "" then
+        return name .. "-" .. realm
+    end
+    return name
+end
+
 function ApiCompat:IsSupported()
     local isClassicEra = WOW_PROJECT_CLASSIC
         and WOW_PROJECT_ID == WOW_PROJECT_CLASSIC

@@ -19,6 +19,13 @@ assert(LoadApi(2, 1, 2):IsSupported() == true)
 assert(LoadApi(3, 1, 2):IsSupported() == false)
 
 local compat = LoadApi(1, 1, 2)
+UnitFullName = function()
+    return "Mage", "TestRealm"
+end
+GetNormalizedRealmName = function()
+    return "TestRealm"
+end
+assert(compat:GetPlayerKey() == "Mage-TestRealm")
 assert(compat:GetChoiceTexture("NEED") == "Interface\\Buttons\\UI-GroupLoot-Dice-Up")
 assert(compat:GetChoiceTexture("GREED") == "Interface\\Buttons\\UI-GroupLoot-Coin-Up")
 assert(compat:GetChoiceTexture("DISENCHANT") == "Interface\\Buttons\\UI-GroupLoot-DE-Up")

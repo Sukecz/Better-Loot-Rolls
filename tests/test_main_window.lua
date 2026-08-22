@@ -79,4 +79,30 @@ local allPassed = {
 }
 assert(ns.MainWindow:GetRecordSummary(allPassed) == "Everyone passed")
 
+local visibilitySetting
+local frameShown = false
+ns.Database = {
+    Set = function(_, key, value)
+        assert(key == "windowShown")
+        visibilitySetting = value
+    end,
+}
+ns.MainWindow.frame = {
+    Show = function()
+        frameShown = true
+    end,
+    Hide = function()
+        frameShown = false
+    end,
+    IsShown = function()
+        return frameShown
+    end,
+}
+ns.MainWindow:Show()
+assert(visibilitySetting == true)
+assert(ns.MainWindow:IsShown() == true)
+ns.MainWindow:Hide()
+assert(visibilitySetting == false)
+assert(ns.MainWindow:IsShown() == false)
+
 print("test_main_window.lua: ok")

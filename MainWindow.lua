@@ -491,6 +491,9 @@ function MainWindow:Initialize()
     local closeButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
     closeButton:SetSize(20, 20)
     closeButton:SetPoint("TOPRIGHT", 1, 0)
+    closeButton:SetScript("OnClick", function()
+        self:Hide()
+    end)
 
     local optionsButton = CreateFrame("Button", nil, frame)
     optionsButton:SetSize(16, 16)
@@ -635,10 +638,12 @@ function MainWindow:Initialize()
 end
 
 function MainWindow:Show()
+    ns.Database:Set("windowShown", true)
     self.frame:Show()
 end
 
 function MainWindow:Hide()
+    ns.Database:Set("windowShown", false)
     self.frame:Hide()
 end
 

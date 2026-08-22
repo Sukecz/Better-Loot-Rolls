@@ -4,6 +4,14 @@ All notable changes to Better Loot Rolls will be documented in this file.
 
 ## [Unreleased]
 
+## [0.1.6] - 2026-08-22
+
+### Fixed
+
+- Restore the main roll window after `/reload` when it was previously open.
+- Keep completed-roll history separate for each character instead of sharing
+  it account-wide.
+
 ## [0.1.5] - 2026-08-11
 
 ### Fixed

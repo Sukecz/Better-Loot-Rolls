@@ -17,7 +17,8 @@ number of completed rolls are retained.
 - Keeps active rolls above completed history.
 - Retains 20 completed rolls by default, configurable from 5 to 100.
 - Provides a movable window that can be resized in both directions.
-- Saves window position, size, scale, options, and bounded recent history.
+- Saves window position, size, scale, options, and open/closed state.
+- Keeps bounded recent history separately for each character.
 - Can open automatically when a new group loot roll begins.
 - Uses no external addon libraries.
 

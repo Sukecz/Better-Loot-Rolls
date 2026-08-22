@@ -43,7 +43,7 @@ function Core:Initialize()
         return
     end
 
-    ns.Database:Initialize()
+    ns.Database:Initialize(ns.ApiCompat:GetPlayerKey())
 
     if not ns.ApiCompat:IsSupported() then
         Print(ns.L.UNSUPPORTED)
@@ -80,7 +80,11 @@ function Core:OnEvent(event, ...)
     end
 
     if event == "PLAYER_LOGIN" then
+        ns.Database:SetCharacterKey(ns.ApiCompat:GetPlayerKey())
         self:Refresh()
+        if ns.Database:Get("windowShown") then
+            ns.MainWindow:Show()
+        end
         self:ShowWelcome()
     elseif event == "LOOT_HISTORY_AUTO_SHOW" then
         self:Refresh()

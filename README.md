@@ -59,9 +59,10 @@ shows the item tooltip. Its small red X
 beside the settings gear immediately clears completed history; active rolls are
 left intact. The options window can also be moved by dragging its header. Click
 an item row to expand or collapse its roll details; Shift-click still inserts
-the item link into chat. Position, size, scale, history limit, and recent rolls
-are stored account-wide. An expanded active roll stays open when its winner is
-announced.
+the item link into chat. Position, size, scale, and history limit are stored
+account-wide, while completed-roll history is kept separately for each
+character. Whether the main window is open also survives `/reload`. An
+expanded active roll stays open when its winner is announced.
 
 ## Current verification status
 

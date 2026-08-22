@@ -3,6 +3,8 @@ local _, ns = ...
 local Database = {}
 ns.Database = Database
 
+local LEGACY_HISTORY_KEY = "__legacyAccountWide"
+
 local function Clamp(value, minimum, maximum, fallback)
     value = tonumber(value)
     if not value then
@@ -63,9 +65,18 @@ local function Migrate(data)
     if (not schemaVersion or schemaVersion < 4) and type(data.settings) == "table" then
         data.settings.welcomeShown = nil
     end
+    if not schemaVersion or schemaVersion < 5 then
+        if type(data.histories) ~= "table" then
+            data.histories = {}
+        end
+        if type(data.history) == "table" and #data.history > 0 then
+            data.histories[LEGACY_HISTORY_KEY] = data.history
+        end
+        data.history = nil
+    end
 end
 
-function Database:Initialize()
+function Database:Initialize(characterKey)
     if type(BetterLootRollsDB) ~= "table" then
         BetterLootRollsDB = {}
     end
@@ -75,6 +86,7 @@ function Database:Initialize()
     BetterLootRollsDB.schemaVersion = ns.Defaults.schemaVersion
     self.data = BetterLootRollsDB
     self:Validate()
+    self:SetCharacterKey(characterKey)
 end
 
 function Database:Validate()
@@ -103,6 +115,7 @@ function Database:Validate()
         defaults.height
     )
     settings.autoShow = settings.autoShow ~= false
+    settings.windowShown = settings.windowShown == true
 
     if type(settings.position) ~= "table" then
         settings.position = CopyTable(defaults.position)
@@ -114,10 +127,16 @@ function Database:Validate()
     settings.position.x = tonumber(settings.position.x) or defaults.position.x
     settings.position.y = tonumber(settings.position.y) or defaults.position.y
 
-    if type(self.data.history) ~= "table" then
-        self.data.history = {}
+    if type(self.data.histories) ~= "table" then
+        self.data.histories = {}
     end
-    self:PruneHistory()
+    for characterKey, history in pairs(self.data.histories) do
+        if type(characterKey) ~= "string" or type(history) ~= "table" then
+            self.data.histories[characterKey] = nil
+        else
+            self:PruneHistory(history)
+        end
+    end
 end
 
 function Database:Get(key)
@@ -129,12 +148,30 @@ function Database:Set(key, value)
     self:Validate()
 end
 
-function Database:GetHistory()
-    return self.data.history
+function Database:SetCharacterKey(characterKey)
+    if type(characterKey) ~= "string" or characterKey == "" then
+        self.characterKey = nil
+        return false
+    end
+
+    self.characterKey = characterKey
+    if type(self.data.histories[characterKey]) ~= "table" then
+        self.data.histories[characterKey] = {}
+    end
+    self:PruneHistory(self.data.histories[characterKey])
+    return true
 end
 
-function Database:PruneHistory()
-    local history = self.data.history
+function Database:GetHistory()
+    if not self.characterKey then
+        self.emptyHistory = self.emptyHistory or {}
+        return self.emptyHistory
+    end
+    return self.data.histories[self.characterKey]
+end
+
+function Database:PruneHistory(history)
+    history = history or self:GetHistory()
     local limit = self.data.settings.historyLimit
     while #history > limit do
         table.remove(history)
@@ -142,21 +179,28 @@ function Database:PruneHistory()
 end
 
 function Database:AddCompleted(record)
+    if not self.characterKey then
+        return false
+    end
+
+    local history = self:GetHistory()
     if record.fingerprint then
-        for index = 1, math.min(5, #self.data.history) do
-            if self.data.history[index].fingerprint == record.fingerprint then
+        for index = 1, math.min(5, #history) do
+            if history[index].fingerprint == record.fingerprint then
                 return false
             end
         end
     end
 
-    table.insert(self.data.history, 1, record)
-    self:PruneHistory()
+    table.insert(history, 1, record)
+    self:PruneHistory(history)
     return true
 end
 
 function Database:ClearHistory()
-    self.data.history = {}
+    if self.characterKey then
+        self.data.histories[self.characterKey] = {}
+    end
 end
 
 function Database:ResetWindow()
