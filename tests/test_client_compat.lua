@@ -32,6 +32,32 @@ assert(compat:GetChoiceTexture("DISENCHANT") == "Interface\\Buttons\\UI-GroupLoo
 assert(compat:GetChoiceTexture("PASS") == "Interface\\Buttons\\UI-GroupLoot-Pass-Up")
 assert(compat:GetChoiceTexture("WAITING") == nil)
 
+local requestedItemID
+C_Item = {
+    GetItemInfo = function()
+        return nil
+    end,
+    RequestLoadItemDataByID = function(itemID)
+        requestedItemID = itemID
+    end,
+}
+GetItemInfo = function()
+    return nil
+end
+GetItemInfoInstant = function()
+    return 19019
+end
+assert(compat:GetItemTexture("|Hitem:19019::::::::|h[Thunderfury]|h")
+    == "Interface\\Icons\\INV_Misc_QuestionMark")
+assert(requestedItemID == 19019)
+
+C_Item.GetItemInfo = function()
+    return nil, nil, nil, nil, nil, nil, nil, nil, nil, 135771
+end
+requestedItemID = nil
+assert(compat:GetItemTexture("|Hitem:19019::::::::|h[Thunderfury]|h") == 135771)
+assert(requestedItemID == nil)
+
 WOW_PROJECT_ID = 1
 C_LootHistory.GetPlayerInfo = nil
 local ns = {}

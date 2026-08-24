@@ -4,6 +4,13 @@ All notable changes to Better Loot Rolls will be documented in this file.
 
 ## [Unreleased]
 
+## [0.1.7] - 2026-08-24
+
+### Fixed
+
+- Load missing item data after login and refresh saved history icons as soon as
+  the item cache becomes available.
+
 ## [0.1.6] - 2026-08-22
 
 ### Fixed

@@ -17,6 +17,7 @@ local selectedCharacter
 local windowShown = true
 local showCount = 0
 local refreshCount = 0
+local windowRefreshCount = 0
 local ns = {
     L = {
         WELCOME_MESSAGE = "is ready.",
@@ -43,7 +44,9 @@ local ns = {
     },
     MainWindow = {
         Initialize = function() end,
-        Refresh = function() end,
+        Refresh = function()
+            windowRefreshCount = windowRefreshCount + 1
+        end,
         Show = function()
             showCount = showCount + 1
         end,
@@ -66,6 +69,15 @@ assert(loadfile("Core.lua"))("BetterLootRolls", ns)
 ns.Core:OnEvent("ADDON_LOADED", "BetterLootRolls")
 assert(initializedCharacter == "Mage-TestRealm")
 assert(eventFrame.events.PLAYER_LOGIN == true)
+assert(eventFrame.events.GET_ITEM_INFO_RECEIVED == true)
+
+ns.Core:OnEvent("GET_ITEM_INFO_RECEIVED", 19019, true)
+assert(windowRefreshCount == 1)
+assert(refreshCount == 0)
+
+ns.Core:OnEvent("GET_ITEM_INFO_RECEIVED", 19019, false)
+assert(windowRefreshCount == 1)
+assert(refreshCount == 0)
 
 ns.Core:OnEvent("PLAYER_LOGIN")
 assert(selectedCharacter == "Mage-TestRealm")

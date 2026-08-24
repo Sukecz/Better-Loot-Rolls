@@ -106,6 +106,23 @@ function ApiCompat:GetChoiceTexture(choice)
     return nil
 end
 
+function ApiCompat:RequestItemData(itemLink)
+    if not C_Item or type(C_Item.RequestLoadItemDataByID) ~= "function" then
+        return
+    end
+
+    local itemID
+    if type(GetItemInfoInstant) == "function" then
+        itemID = GetItemInfoInstant(itemLink)
+    end
+    if not itemID and type(itemLink) == "string" then
+        itemID = tonumber(itemLink:match("item:(%d+)"))
+    end
+    if itemID then
+        C_Item.RequestLoadItemDataByID(itemID)
+    end
+end
+
 function ApiCompat:GetItemTexture(itemLink)
     if not itemLink then
         return "Interface\\Icons\\INV_Misc_QuestionMark"
@@ -125,6 +142,7 @@ function ApiCompat:GetItemTexture(itemLink)
         end
     end
 
+    self:RequestItemData(itemLink)
     return "Interface\\Icons\\INV_Misc_QuestionMark"
 end
 

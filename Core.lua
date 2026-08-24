@@ -58,6 +58,7 @@ function Core:Initialize()
     end)
 
     eventFrame:RegisterEvent("PLAYER_LOGIN")
+    eventFrame:RegisterEvent("GET_ITEM_INFO_RECEIVED")
     eventFrame:RegisterEvent("LOOT_HISTORY_FULL_UPDATE")
     eventFrame:RegisterEvent("LOOT_HISTORY_ROLL_CHANGED")
     eventFrame:RegisterEvent("LOOT_HISTORY_ROLL_COMPLETE")
@@ -86,6 +87,11 @@ function Core:OnEvent(event, ...)
             ns.MainWindow:Show()
         end
         self:ShowWelcome()
+    elseif event == "GET_ITEM_INFO_RECEIVED" then
+        local _, succeeded = ...
+        if succeeded then
+            ns.MainWindow:Refresh()
+        end
     elseif event == "LOOT_HISTORY_AUTO_SHOW" then
         self:Refresh()
         if ns.Database:Get("autoShow") then
