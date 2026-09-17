@@ -91,4 +91,5 @@ The shared deployment tool is maintained in the separate local
 `/home/msminipc/projects/wow-addon-deployer` repository. Run it through
 `/home/msminipc/bin/deploy-wow-addons-pc` on MINIPC. It tests and validates the
 registered addons before synchronizing their runtime files and does not touch
-WoW SavedVariables.
+WoW SavedVariables. Do not restore a private deploy-script copy in this addon
+repository; client targets and compatibility flags are maintained centrally.
