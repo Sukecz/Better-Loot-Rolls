@@ -41,7 +41,12 @@ Master Loot actions.
 Better Loot Rolls supports:
 
 - World of Warcraft Classic Era, including Hardcore realms (`1.15.9`);
-- World of Warcraft: Burning Crusade Classic Anniversary (`2.5.6`).
+- World of Warcraft: Burning Crusade Classic Anniversary (`2.5.6`);
+- WoW Forever beta (`1.60.1`, experimental and not yet tested in game).
+
+Forever shows the choices reported by its encounter loot API, including Need
+main/off spec and Transmog. Test group rolls and saved settings/history after
+`/reload` before relying on beta support.
 
 Please report the exact client build, locale, reproduction steps, and `/blr
 api` output with any problem.

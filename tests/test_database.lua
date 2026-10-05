@@ -40,6 +40,19 @@ local record = { fingerprint = "unique" }
 assert(ns.Database:AddCompleted(record) == true)
 assert(ns.Database:AddCompleted(record) == false)
 
+-- Reload can replay a full encounter containing more than five completed rolls.
+ns.Database:Set("historyLimit", 20)
+for index = 1, 10 do
+    assert(ns.Database:AddCompleted({ fingerprint = "replayed-" .. index }))
+end
+assert(not ns.Database:AddCompleted(record))
+local historyCount = #ns.Database:GetHistory()
+for index = 1, 10 do
+    assert(not ns.Database:AddCompleted({ fingerprint = "replayed-" .. index }))
+end
+assert(#ns.Database:GetHistory() == historyCount)
+ns.Database:Set("historyLimit", 5)
+
 assert(ns.Database:SetCharacterKey("Rogue-TestRealm") == true)
 assert(#ns.Database:GetHistory() == 0)
 assert(ns.Database:AddCompleted({ fingerprint = "rogue" }) == true)

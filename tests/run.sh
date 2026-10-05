@@ -50,13 +50,13 @@ while IFS= read -r toc_file; do
 done <<< "$vanilla_files"
 
 grep -qx '## Interface: 11509' BetterLootRolls.toc
-grep -qx '## Version: 0.1.7' BetterLootRolls.toc
+grep -qx '## Version: 0.2.0-beta.1' BetterLootRolls.toc
 grep -qx '## X-Curse-Project-ID: 1629593' BetterLootRolls.toc
 grep -qx '## X-Flavor: Vanilla' BetterLootRolls.toc
 grep -qx '## AllowLoadGameType: vanilla' BetterLootRolls.toc
 grep -Fqx '## IconTexture: Interface\AddOns\BetterLootRolls\assets\addon-icon.tga' BetterLootRolls.toc
 grep -qx '## Interface: 20506' BetterLootRolls_TBC.toc
-grep -qx '## Version: 0.1.7' BetterLootRolls_TBC.toc
+grep -qx '## Version: 0.2.0-beta.1' BetterLootRolls_TBC.toc
 grep -qx '## X-Curse-Project-ID: 1629593' BetterLootRolls_TBC.toc
 grep -qx '## X-Flavor: TBC' BetterLootRolls_TBC.toc
 grep -qx '## AllowLoadGameType: tbc' BetterLootRolls_TBC.toc
@@ -64,4 +64,16 @@ grep -Fqx '## IconTexture: Interface\AddOns\BetterLootRolls\assets\addon-icon.tg
 test -f assets/logo.png
 file assets/addon-icon.tga | grep -Fq '256 x 256 x 32'
 
-echo "All Lua 5.1 and TOC checks passed."
+forever_files="$(sed -n '/^[^#[:space:]].*\.lua$/p' BetterLootRolls_Camelot.toc)"
+if [[ "$vanilla_files" != "$forever_files" ]]; then
+    echo "TOC Lua load orders differ between Vanilla and Forever." >&2
+    exit 1
+fi
+grep -qx '## Interface: 16001' BetterLootRolls_Camelot.toc
+grep -qx '## Version: 0.2.0-beta.1' BetterLootRolls_Camelot.toc
+grep -qx '## X-Curse-Project-ID: 1629593' BetterLootRolls_Camelot.toc
+grep -qx '## X-Flavor: Forever' BetterLootRolls_Camelot.toc
+grep -qx '## AllowLoadGameType: camelot' BetterLootRolls_Camelot.toc
+grep -qx '## SavedVariables: BetterLootRollsDB' BetterLootRolls_Camelot.toc
+
+echo "All Lua 5.1 and three-client TOC checks passed."

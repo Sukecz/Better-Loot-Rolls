@@ -59,10 +59,9 @@ function Core:Initialize()
 
     eventFrame:RegisterEvent("PLAYER_LOGIN")
     eventFrame:RegisterEvent("GET_ITEM_INFO_RECEIVED")
-    eventFrame:RegisterEvent("LOOT_HISTORY_FULL_UPDATE")
-    eventFrame:RegisterEvent("LOOT_HISTORY_ROLL_CHANGED")
-    eventFrame:RegisterEvent("LOOT_HISTORY_ROLL_COMPLETE")
-    eventFrame:RegisterEvent("LOOT_HISTORY_AUTO_SHOW")
+    for _, event in ipairs(ns.ApiCompat:GetLootEvents()) do
+        eventFrame:RegisterEvent(event)
+    end
 
     self.initialized = true
 end
@@ -92,7 +91,7 @@ function Core:OnEvent(event, ...)
         if succeeded then
             ns.MainWindow:Refresh()
         end
-    elseif event == "LOOT_HISTORY_AUTO_SHOW" then
+    elseif ns.ApiCompat:IsAutoShowEvent(event) then
         self:Refresh()
         if ns.Database:Get("autoShow") then
             ns.MainWindow:Show()

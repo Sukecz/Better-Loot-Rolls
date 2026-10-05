@@ -4,6 +4,24 @@ All notable changes to Better Loot Rolls will be documented in this file.
 
 ## [Unreleased]
 
+## [0.2.0-beta.1] - 2026-10-05
+
+### Added
+
+- Experimental WoW Forever beta support with a dedicated Camelot TOC and
+  encounter-based loot history adapter.
+- Forever Need main/off spec, Transmog, Greed, Pass, waiting, roll values, and
+  winner display in the shared roll window.
+- Client-specific loot events and API backend information in `/blr api`.
+- Offline regression coverage for Forever rolls and the Era/TBC paths.
+
+### Fixed
+
+- Check the full bounded history for duplicates when the client replays more
+  than five completed rolls after login or `/reload`.
+
+Forever support still requires in-game group-loot and persistence testing.
+
 ## [0.1.7] - 2026-08-24
 
 ### Fixed

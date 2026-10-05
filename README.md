@@ -1,7 +1,7 @@
 # Better Loot Rolls
 
 Better Loot Rolls is a lightweight group-loot history window for World of
-Warcraft Classic Era, Classic Hardcore, and TBC Classic Anniversary. It
+Warcraft Classic Era, Classic Hardcore, TBC Classic Anniversary, and WoW Forever beta. It
 presents the same server-provided roll information as Blizzard's `/loot`
 window in a movable, fully resizable view.
 
@@ -36,6 +36,7 @@ Copy the addon as `BetterLootRolls` into the matching client:
 ```text
 World of Warcraft/_classic_era_/Interface/AddOns/BetterLootRolls/
 World of Warcraft/_classic_/Interface/AddOns/BetterLootRolls/
+World of Warcraft/_classic_beta_/Interface/AddOns/BetterLootRolls/
 ```
 
 After logging in, use `/blr` to toggle the window.
@@ -70,6 +71,14 @@ The source targets Classic Era interface `11509` and TBC interface `20506`,
 using the shared `C_LootHistory` API shapes present in Era 1.15.9 and TBC
 2.5.6. Offline Lua 5.1 and model tests are included; live-client behavior is
 not covered by the automated test suite.
+
+Forever beta uses interface `16001`, game type `camelot`, and the encounter-based
+`C_LootHistory` API. Its Need (main spec/off spec), Transmog, Greed, Pass, waiting,
+roll values, and winners are normalized into the same window. Only choices
+reported by the client are displayed; no Disenchant choice is invented for
+Forever's API. Forever support is experimental and has not been tested in game.
+Before treating it as verified, test active rolls, winners, everyone passing,
+automatic opening, and saved settings/history after `/reload` and relogging.
 
 ## Support
 

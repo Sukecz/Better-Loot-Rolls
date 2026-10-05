@@ -40,6 +40,8 @@ function RollTracker:BuildRecord(historyIndex)
         isDone = item.isDone,
         isMasterLoot = item.isMasterLoot,
         isCurrency = item.isCurrency,
+        allPassed = item.allPassed,
+        sortTime = item.sortTime,
         players = {},
     }
 
@@ -76,12 +78,16 @@ function RollTracker:Refresh()
         end
     end
 
-    table.sort(active, function(left, right)
-        return left.rollID > right.rollID
-    end)
-    table.sort(completed, function(left, right)
+    local function OlderFirst(left, right)
+        if left.sortTime and right.sortTime and left.sortTime ~= right.sortTime then
+            return left.sortTime < right.sortTime
+        end
         return left.rollID < right.rollID
+    end
+    table.sort(active, function(left, right)
+        return OlderFirst(right, left)
     end)
+    table.sort(completed, OlderFirst)
 
     for _, record in ipairs(completed) do
         if not self.captured[record.fingerprint] then

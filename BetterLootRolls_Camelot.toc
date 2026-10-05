@@ -1,0 +1,20 @@
+## Interface: 16001
+## Title: Better Loot Rolls
+## Notes: A configurable recent history of group loot rolls for WoW Classic Era, TBC Classic, and Forever beta.
+## Author: Better Loot Rolls Authors
+## Version: 0.2.0-beta.1
+## SavedVariables: BetterLootRollsDB
+## X-Curse-Project-ID: 1629593
+## X-Flavor: Forever
+## AllowLoadGameType: camelot
+## IconTexture: Interface\AddOns\BetterLootRolls\assets\addon-icon.tga
+
+Locales\enUS.lua
+Defaults.lua
+ApiCompat.lua
+Database.lua
+RollTracker.lua
+MainWindow.lua
+Options.lua
+SlashCommands.lua
+Core.lua

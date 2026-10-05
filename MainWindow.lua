@@ -36,11 +36,11 @@ local function GetClassColor(class)
 end
 
 local function GetChoiceColor(choice)
-    if choice == "NEED" then
+    if choice == "NEED" or choice == "NEED_OFFSPEC" then
         return 0.25, 0.75, 1
     elseif choice == "GREED" then
         return 1, 0.82, 0
-    elseif choice == "DISENCHANT" then
+    elseif choice == "DISENCHANT" or choice == "TRANSMOG" then
         return 0.72, 0.38, 1
     elseif choice == "PASS" then
         return 0.55, 0.55, 0.55
@@ -87,6 +87,8 @@ end
 local function GetCompactChoice(choice)
     if choice == "DISENCHANT" then
         return "DE"
+    elseif choice == "NEED_OFFSPEC" then
+        return "Need OS"
     elseif choice == "WAITING" then
         return "…"
     end
@@ -239,6 +241,10 @@ function MainWindow:GetRecordSummary(record)
             local red, green, blue = GetClassColor(player.class)
             return summary, red, green, blue
         end
+    end
+
+    if record.allPassed then
+        return ns.L.ALL_PASSED, 0.55, 0.55, 0.55
     end
 
     local allPassed = #record.players > 0

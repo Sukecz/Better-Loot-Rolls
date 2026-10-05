@@ -185,7 +185,9 @@ function Database:AddCompleted(record)
 
     local history = self:GetHistory()
     if record.fingerprint then
-        for index = 1, math.min(5, #history) do
+        -- The whole list is bounded to 100. A client can return more than five
+        -- completed drops on login; check them all before importing duplicates.
+        for index = 1, #history do
             if history[index].fingerprint == record.fingerprint then
                 return false
             end

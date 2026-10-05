@@ -29,6 +29,12 @@ local ns = {
         IsSupported = function()
             return true
         end,
+        GetLootEvents = function()
+            return { "LOOT_HISTORY_FULL_UPDATE", "LOOT_HISTORY_AUTO_SHOW" }
+        end,
+        IsAutoShowEvent = function(_, event)
+            return event == "LOOT_HISTORY_AUTO_SHOW"
+        end,
     },
     Database = {
         Initialize = function(_, characterKey)
