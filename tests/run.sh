@@ -50,13 +50,13 @@ while IFS= read -r toc_file; do
 done <<< "$vanilla_files"
 
 grep -qx '## Interface: 11509' BetterLootRolls.toc
-grep -qx '## Version: 0.2.0-beta.2' BetterLootRolls.toc
+grep -qx '## Version: 0.2.0' BetterLootRolls.toc
 grep -qx '## X-Curse-Project-ID: 1629593' BetterLootRolls.toc
 grep -qx '## X-Flavor: Vanilla' BetterLootRolls.toc
 grep -qx '## AllowLoadGameType: vanilla' BetterLootRolls.toc
 grep -Fqx '## IconTexture: Interface\AddOns\BetterLootRolls\assets\addon-icon.tga' BetterLootRolls.toc
 grep -qx '## Interface: 20506' BetterLootRolls_TBC.toc
-grep -qx '## Version: 0.2.0-beta.2' BetterLootRolls_TBC.toc
+grep -qx '## Version: 0.2.0' BetterLootRolls_TBC.toc
 grep -qx '## X-Curse-Project-ID: 1629593' BetterLootRolls_TBC.toc
 grep -qx '## X-Flavor: TBC' BetterLootRolls_TBC.toc
 grep -qx '## AllowLoadGameType: tbc' BetterLootRolls_TBC.toc
@@ -70,7 +70,7 @@ if [[ "$vanilla_files" != "$forever_files" ]]; then
     exit 1
 fi
 grep -qx '## Interface: 16001' BetterLootRolls_Camelot.toc
-grep -qx '## Version: 0.2.0-beta.2' BetterLootRolls_Camelot.toc
+grep -qx '## Version: 0.2.0' BetterLootRolls_Camelot.toc
 grep -qx '## X-Curse-Project-ID: 1629593' BetterLootRolls_Camelot.toc
 grep -qx '## X-Flavor: Forever' BetterLootRolls_Camelot.toc
 grep -qx '## AllowLoadGameType: camelot' BetterLootRolls_Camelot.toc

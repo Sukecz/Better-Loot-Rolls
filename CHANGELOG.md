@@ -4,6 +4,22 @@ All notable changes to Better Loot Rolls will be documented in this file.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-09
+
+### Added
+
+- WoW Forever support alongside Classic Era/Hardcore and TBC Classic.
+- Compact hover details for all players, with Need-first ordering, roll values,
+  winner markers, and an indicator for your own player.
+- The winner's choice beside their result and a separate, clearly labeled
+  tooltip for your own choice icon. Hover the item icon for its full tooltip.
+
+### Release
+
+- Stable release of the functionality from 0.2.0-beta.2, with no runtime changes.
+- Automated tests and package checks pass; maintainer in-game verification of
+  Forever remains pending.
+
 ## [0.2.0-beta.2] - 2026-11-09
 
 ### Added
