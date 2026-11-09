@@ -4,6 +4,17 @@ All notable changes to Better Loot Rolls will be documented in this file.
 
 ## [Unreleased]
 
+## [0.2.0-beta.2] - 2026-11-09
+
+### Added
+
+- Compact roll preview on hover: player names, choices, rolls, winner, and your
+  own player marker. Hover the item icon to see the full item tooltip.
+- Need-first ordering in both the hover preview and expanded details, with
+  higher rolls first within each choice and confirmed winners first on ties.
+- Winner choice icon beside the result, separate from the existing own-choice
+  icon, which now has an explicit “Your roll” tooltip.
+
 ## [0.2.0-beta.1] - 2026-10-05
 
 ### Added

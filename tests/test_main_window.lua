@@ -67,7 +67,7 @@ local completed = {
 }
 ns.MainWindow:PreserveExpandedState({ completed })
 assert(ns.MainWindow.expandedRecords[ns.MainWindow:GetRecordKey(completed)] == true)
-assert(ns.MainWindow:GetRecordSummary(completed) == "Mage 88")
+assert(ns.MainWindow:GetRecordSummary(completed) == "|Ttexture:NEED:12:12|t Mage 88")
 assert(ns.MainWindow:GetOwnChoice(completed) == "NEED")
 
 local allPassed = {
@@ -78,6 +78,61 @@ local allPassed = {
     },
 }
 assert(ns.MainWindow:GetRecordSummary(allPassed) == "Everyone passed")
+
+-- Hover and expanded views share a choice/roll ordering without changing history.
+ns.L.NEED = "Need"
+ns.L.GREED = "Greed"
+ns.L.PASS = "Pass"
+ns.L.YOUR_CHOICE = "Your roll: %s"
+ns.L.YOU = "(You)"
+local preview = {
+    itemLink = "item:123",
+    players = {
+        { name = "Alpha-Realm", choice = "GREED", roll = 100, isMe = true },
+        { name = "Zed-Realm", choice = "NEED", roll = 20 },
+        { name = "Beta-Realm", choice = "NEED", roll = 90, isWinner = true },
+        { name = "Aaron", choice = "PASS" },
+        { name = "Ada", choice = "NEED", roll = 20 },
+    },
+}
+local sorted = ns.MainWindow:GetSortedPlayers(preview)
+assert(sorted[1].name == "Beta-Realm")
+assert(sorted[2].name == "Ada" and sorted[3].name == "Zed-Realm")
+assert(sorted[4].choice == "GREED" and sorted[5].choice == "PASS")
+assert(preview.players[1].name == "Alpha-Realm")
+local lines, title, owner, shown = {}, nil, nil, false
+GameTooltip = {
+    SetOwner = function(_, value) owner = value end,
+    SetText = function(_, value) title = value end,
+    AddLine = function(_, text) lines[#lines + 1] = { text } end,
+    AddDoubleLine = function(_, left, right) lines[#lines + 1] = { left, right } end,
+    Show = function() shown = true end,
+}
+local card = { record = preview }
+ns.MainWindow:ShowRollTooltip(card)
+assert(owner == card and title == "item:123" and shown)
+assert(lines[1][1]:find("Beta", 1, true) and lines[1][1]:find("ReadyCheck-Ready", 1, true))
+assert(lines[1][2] == "Need  90")
+assert(lines[4][1] == "Alpha (You)" and lines[4][2] == "Greed  100")
+card.ownChoiceButton = {}
+ns.MainWindow:ShowOwnChoiceTooltip(card)
+assert(owner == card.ownChoiceButton and title == "Your roll: Greed")
+preview.players[2].roll = 90
+sorted = ns.MainWindow:GetSortedPlayers(preview)
+assert(sorted[1].isWinner and sorted[2].name == "Zed-Realm")
+-- Large groups are not truncated and pending players have no invented roll.
+preview.players = {}
+for index = 1, 40 do
+    preview.players[index] = { name = "Player" .. index, choice = "WAITING" }
+end
+lines = {}
+ns.MainWindow:ShowRollTooltip(card)
+assert(#lines == 40 and lines[1][2] == "Waiting")
+preview.players = {}
+preview.isDone = true
+lines = {}
+ns.MainWindow:ShowRollTooltip(card)
+assert(#lines == 1 and lines[1][1] == "Everyone passed")
 
 local visibilitySetting
 local frameShown = false

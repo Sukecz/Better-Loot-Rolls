@@ -155,18 +155,45 @@ function MainWindow:CreateCard()
     card.ownChoiceIcon:SetSize(18, 18)
     card.ownChoiceIcon:SetPoint("TOPRIGHT", -3, -6)
 
+    card.ownChoiceButton = CreateFrame("Button", nil, card)
+    card.ownChoiceButton:SetAllPoints(card.ownChoiceIcon)
+    card.ownChoiceButton:RegisterForClicks("LeftButtonUp")
+    card.ownChoiceButton:SetScript("OnEnter", function()
+        self:ShowOwnChoiceTooltip(card)
+    end)
+    card.ownChoiceButton:SetScript("OnLeave", function()
+        GameTooltip:Hide()
+    end)
+    card.ownChoiceButton:SetScript("OnClick", function()
+        card:GetScript("OnClick")(card)
+    end)
+    card:SetScript("OnHide", function()
+        if GameTooltip:IsOwned(card) or GameTooltip:IsOwned(card.itemButton)
+            or GameTooltip:IsOwned(card.ownChoiceButton) then
+            GameTooltip:Hide()
+        end
+    end)
     card.playerRows = {}
 
     card:SetScript("OnEnter", function(frame)
-        if not frame.itemLink then
-            return
-        end
-        GameTooltip:SetOwner(frame, "ANCHOR_RIGHT")
-        GameTooltip:SetHyperlink(frame.itemLink)
-        GameTooltip:Show()
+        self:ShowRollTooltip(frame)
     end)
     card:SetScript("OnLeave", function()
         GameTooltip:Hide()
+    end)
+
+    -- Keep the full item tooltip on the icon; the rest of the header previews rolls.
+    card.itemButton = CreateFrame("Button", nil, card)
+    card.itemButton:SetAllPoints(card.icon)
+    card.itemButton:RegisterForClicks("LeftButtonUp")
+    card.itemButton:SetScript("OnEnter", function()
+        self:ShowItemTooltip(card)
+    end)
+    card.itemButton:SetScript("OnLeave", function()
+        GameTooltip:Hide()
+    end)
+    card.itemButton:SetScript("OnClick", function()
+        card:GetScript("OnClick")(card)
     end)
     card:SetScript("OnClick", function(frame)
         if frame.itemLink and IsModifiedClick("CHATLINK") then
@@ -235,6 +262,10 @@ function MainWindow:GetRecordSummary(record)
     for _, player in ipairs(record.players) do
         if player.isWinner then
             local summary = GetCompactPlayerName(player.name)
+            local texture = ns.ApiCompat:GetChoiceTexture(player.choice)
+            if texture then
+                summary = "|T" .. texture .. ":12:12|t " .. summary
+            end
             if player.roll then
                 summary = summary .. " " .. tostring(player.roll)
             end
@@ -269,6 +300,85 @@ function MainWindow:GetOwnChoice(record)
     end
 
     return nil
+end
+
+-- Sort a copy so display order never changes persisted history fingerprints.
+function MainWindow:GetSortedPlayers(record)
+    local priority = {
+        NEED = 1, NEED_OFFSPEC = 2, TRANSMOG = 3,
+        GREED = 4, DISENCHANT = 4, PASS = 5, WAITING = 6,
+    }
+    local players = {}
+    for index, player in ipairs(record.players) do
+        players[index] = player
+    end
+    table.sort(players, function(left, right)
+        local leftPriority = priority[left.choice] or 7
+        local rightPriority = priority[right.choice] or 7
+        if leftPriority ~= rightPriority then
+            return leftPriority < rightPriority
+        end
+        local leftRoll, rightRoll = left.roll or -1, right.roll or -1
+        if leftRoll ~= rightRoll then
+            return leftRoll > rightRoll
+        end
+        if (not not left.isWinner) ~= (not not right.isWinner) then
+            return not not left.isWinner
+        end
+        return (left.name or "") < (right.name or "")
+    end)
+    return players
+end
+
+function MainWindow:ShowItemTooltip(card)
+    if card.itemLink then
+        GameTooltip:SetOwner(card.itemButton, "ANCHOR_RIGHT")
+        GameTooltip:SetHyperlink(card.itemLink)
+        GameTooltip:Show()
+    else
+        GameTooltip:Hide()
+    end
+end
+
+function MainWindow:ShowOwnChoiceTooltip(card)
+    local choice = card.record and self:GetOwnChoice(card.record)
+    if not choice then
+        return
+    end
+    GameTooltip:SetOwner(card.ownChoiceButton, "ANCHOR_RIGHT")
+    GameTooltip:SetText(string.format(ns.L.YOUR_CHOICE, ns.L[choice] or ns.L.UNKNOWN))
+    GameTooltip:Show()
+end
+
+function MainWindow:ShowRollTooltip(card)
+    local record = card.record
+    if not record then
+        return
+    end
+    GameTooltip:SetOwner(card, "ANCHOR_RIGHT")
+    GameTooltip:SetText(record.itemLink or ns.L.UNKNOWN)
+    for _, player in ipairs(self:GetSortedPlayers(record)) do
+        local name = type(Ambiguate) == "function"
+            and Ambiguate(player.name or ns.L.UNKNOWN, "short")
+            or (player.name or ns.L.UNKNOWN):match("^([^-]+)")
+        if player.isMe then
+            name = name .. " " .. ns.L.YOU
+        end
+        local prefix = player.isWinner
+            and "|TInterface\\RaidFrame\\ReadyCheck-Ready:12:12|t " or ""
+        local result = ns.L[player.choice] or ns.L.UNKNOWN
+        if player.roll then
+            result = result .. "  " .. tostring(player.roll)
+        end
+        local r, g, b = GetClassColor(player.class)
+        local cr, cg, cb = GetChoiceColor(player.choice)
+        GameTooltip:AddDoubleLine(prefix .. name, result, r, g, b, cr, cg, cb)
+    end
+    if #record.players == 0 then
+        GameTooltip:AddLine(record.isDone and ns.L.ALL_PASSED or ns.L.WAITING,
+            0.7, 0.7, 0.7)
+    end
+    GameTooltip:Show()
 end
 
 function MainWindow:RenderPlayerRow(row, player, rowIndex, cardWidth)
@@ -325,6 +435,7 @@ function MainWindow:RenderCard(card, record, topOffset, cardWidth, hideItemName)
     card:SetSize(cardWidth, cardHeight)
     card.recordKey = recordKey
     card.itemLink = record.itemLink
+    card.record = record
     card.expandIndicator:SetText(isExpanded and "-" or "+")
     card.icon:ClearAllPoints()
     card.icon:SetPoint("TOPLEFT", 16, -4)
@@ -332,6 +443,7 @@ function MainWindow:RenderCard(card, record, topOffset, cardWidth, hideItemName)
     local ownChoiceTexture = ns.ApiCompat:GetChoiceTexture(self:GetOwnChoice(record))
     card.ownChoiceIcon:SetTexture(ownChoiceTexture)
     card.ownChoiceIcon:SetShown(ownChoiceTexture ~= nil)
+    card.ownChoiceButton:SetShown(ownChoiceTexture ~= nil)
     local statusText, statusRed, statusGreen, statusBlue = self:GetRecordSummary(record)
     card.status:ClearAllPoints()
     if hideItemName then
@@ -366,7 +478,7 @@ function MainWindow:RenderCard(card, record, topOffset, cardWidth, hideItemName)
             choice = record.isDone and "PASS" or "WAITING",
         }, 1, cardWidth)
     else
-        for playerIndex, player in ipairs(record.players) do
+        for playerIndex, player in ipairs(self:GetSortedPlayers(record)) do
             local row = card.playerRows[playerIndex] or self:CreatePlayerRow(card)
             card.playerRows[playerIndex] = row
             self:RenderPlayerRow(row, player, playerIndex, cardWidth)
@@ -380,6 +492,17 @@ function MainWindow:RenderCard(card, record, topOffset, cardWidth, hideItemName)
     end
 
     card:Show()
+    if GameTooltip:IsOwned(card) then
+        self:ShowRollTooltip(card)
+    elseif GameTooltip:IsOwned(card.itemButton) then
+        self:ShowItemTooltip(card)
+    elseif GameTooltip:IsOwned(card.ownChoiceButton) then
+        if ownChoiceTexture then
+            self:ShowOwnChoiceTooltip(card)
+        else
+            GameTooltip:Hide()
+        end
+    end
     return cardHeight
 end
 

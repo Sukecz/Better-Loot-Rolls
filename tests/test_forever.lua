@@ -74,7 +74,7 @@ assert(#ns.RollTracker.active == 0 and #history == 2)
 assert(history[1].itemLink == "item:2")
 assert(history[1].players[1].choice == "GREED")
 assert(history[1].players[1].isWinner and history[1].players[1].roll == 50)
-assert(ns.MainWindow:GetRecordSummary(history[1]) == "Mage 50")
+assert(ns.MainWindow:GetRecordSummary(history[1]) == "|TInterface\\Buttons\\UI-GroupLoot-Coin-Up:12:12|t Mage 50")
 
 -- API sorting/encounter order may change without changing the completed roll.
 activeDrop.rollInfos = { activeDrop.rollInfos[2], activeDrop.rollInfos[1] }
